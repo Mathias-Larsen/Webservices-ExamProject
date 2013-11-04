@@ -30,6 +30,16 @@
                     <xsd:element name="expDate" type="xsd:date"></xsd:element>
                 </xsd:sequence>
             </xsd:complexType>
+            <xsd:element name="Request">
+                <xsd:complexType>
+                    <xsd:sequence/>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="Response">
+                <xsd:complexType>
+                    <xsd:sequence/>
+                </xsd:complexType>
+            </xsd:element>
         </xsd:schema>
     </types>
     <message name="getHotelsRequest">
