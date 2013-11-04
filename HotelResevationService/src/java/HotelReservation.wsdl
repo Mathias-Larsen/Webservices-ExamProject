@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="HotelReservation" targetNamespace="http://j2ee.netbeans.org/wsdl/HotelResevationService/java/newWSDL"
+    xmlns="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://j2ee.netbeans.org/wsdl/HotelResevationService/java/newWSDL" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype">
+    <types>
+        <xsd:schema targetNamespace="http://j2ee.netbeans.org/wsdl/HotelResevationService/java/newWSDL" xmlns:tns="http://j2ee.netbeans.org/wsdl/HotelResevationService/java/newWSDL">
+            <xsd:complexType name="hotelBookingType">
+                <xsd:sequence>
+                    <xsd:element name="name" type="xsd:string"></xsd:element>
+                    <xsd:element name="hotelAddress" type="tns:address"></xsd:element>
+                    <xsd:element name="bookingNumber" type="xsd:string"></xsd:element>
+                    <xsd:element name="price" type="xsd:string"></xsd:element>
+                    <xsd:element name="creditCardReq" type="xsd:boolean"></xsd:element>
+                    <xsd:element name="hotelResServiceName" type="xsd:string"></xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="addressType">
+                <xsd:sequence>
+                    <xsd:element name="street" type="xsd:string"></xsd:element>
+                    <xsd:element name="city" type="xsd:string"></xsd:element>
+                    <xsd:element name="zip" type="xsd:string"></xsd:element>
+                    <xsd:element name="country" type="xsd:string"></xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="creditcardType">
+                <xsd:sequence>
+                    <xsd:element name="holderName" type="xsd:string"></xsd:element>
+                    <xsd:element name="cardNumber" type="xsd:string"></xsd:element>
+                    <xsd:element name="expDate" type="xsd:date"></xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:schema>
+    </types>
+    <message name="getHotelsRequest">
+        <part name="city" type="xsd:string"/>
+        <part name="aDate" type="xsd:date"/>
+        <part name="deDate" type="xsd:date"/>
+    </message>
+    <message name="getHotelsResponse">
+        <part name="hotels" type="xsd:string"/>
+    </message>
+    <message name="BookingOperationRequest">
+        <part name="bookingNumber" type="xsd:string"/>
+        <part name="creditcardInf" type="tns:creditcardType"/>
+    </message>
+    <message name="BookingOperationResponse">
+        <part name="success" type="xsd:boolean"/>
+    </message>
+    <message name="BookingFault">
+        <part name="creditNotValid" type="xsd:string"/>
+        <part name="noFunds" type="xsd:string"/>
+        <part name="etc" type="xsd:string"/>
+    </message>
+    <message name="CancelHotelOperationRequest">
+        <part name="bookingNumber" type="xsd:string"/>
+    </message>
+    <message name="CancelHotelOperationResponse">
+        <part name="success" type="xsd:boolean"/>
+    </message>
+    <message name="CancelHotelFault">
+        <part name="cancelFault" type="xsd:string"/>
+    </message>
+    <portType name="HotelReservationPortType">
+        <operation name="getHotels">
+            <input name="input1" message="tns:getHotelsRequest"/>
+            <output name="output1" message="tns:getHotelsResponse"/>
+        </operation>
+        <operation name="bookHotel">
+            <input name="input2" message="tns:BookingOperationRequest"/>
+            <output name="output2" message="tns:BookingOperationResponse"/>
+            <fault name="fault1" message="tns:BookingFault"/>
+        </operation>
+        <operation name="cancelHotel">
+            <input name="input3" message="tns:CancelHotelOperationRequest"/>
+            <output name="output3" message="tns:CancelHotelOperationResponse"/>
+            <fault name="fault1" message="tns:CancelHotelFault"/>
+        </operation>
+    </portType>
+    <plnk:partnerLinkType name="HotelReservation">
+        <!-- A partner link type is automatically generated when a new port type is added. Partner link types are used by BPEL processes. 
+In a BPEL process, a partner link represents the interaction between the BPEL process and a partner service. Each partner link is associated with a partner link type.
+A partner link type characterizes the conversational relationship between two services. The partner link type can have one or two roles.-->
+        <plnk:role name="HotelReservationPortTypeRole" portType="tns:HotelReservationPortType"/>
+    </plnk:partnerLinkType>
+</definitions>
