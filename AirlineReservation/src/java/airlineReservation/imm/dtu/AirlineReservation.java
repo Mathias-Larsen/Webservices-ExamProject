@@ -16,6 +16,10 @@ import dk.dtu.imm.fastmoney.CreditCardFaultMessage;
 import javax.xml.datatype.XMLGregorianCalendar;
 import dk.dtu.imm.fastmoney.types.CreditCardInfoType;
 import dk.dtu.imm.fastmoney.types.AccountType;
+import java.util.ArrayList;
+import dk.dtu.imm.airlinereservation.types.FlightType;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
 import javax.xml.ws.WebServiceRef;
 
 /**
@@ -28,23 +32,53 @@ public class AirlineReservation {
         //@WebServiceRef(wsdlLocation = "WEB-INF/wsdl/fastmoney.imm.dtu.dk_8080/BankService.wsdl")
     //and replaing it with the following line to get the bankService to work:
     private BankService service = new BankService();
-
+    
+    private static ArrayList<FlightInformationType> FLIGHTS = new ArrayList<FlightInformationType>();
+    private static ArrayList<Integer> BOOKEDFLIGHTS = new ArrayList<Integer>();
+    private static int GROUPNUMBER = 11;
+    private static AccountType ACCOUNT;
+    
+    public AirlineReservation()
+    {
+        ACCOUNT = new AccountType();//GENERATE THE LAMEDUCK ACCOUNT
+        ACCOUNT.setName("LameDuck");
+        ACCOUNT.setNumber("50208812");
+        generateFLightInformation(); //GENERATE INFORMATION
+    }
+    
     public List<FlightInformationType> getFlights(String start, String end, XMLGregorianCalendar date) {
         //TODO implement this method
         throw new UnsupportedOperationException("Not implemented yet.");
     }
 
     public boolean bookFlight(int bookingNumber, CreditCardInfoType creditcard) throws BookFlightFaultMessage {
-        AccountType account = new AccountType();
-        account.setName("TravelGood");
-        account.setNumber("50108811");
+
         boolean toReturn;
-        try {
-            toReturn = chargeCreditCard(11,creditcard,200,account);
-        } catch (CreditCardFaultMessage ex) {
+        FlightInformationType choosenFlightInfo = null;
+        for(FlightInformationType flightInfo : FLIGHTS)
+        {
+            if(flightInfo.getBookingNumber()==bookingNumber)
+            {
+               choosenFlightInfo = flightInfo;
+            }
+        }
+        if(choosenFlightInfo==null)
+        {
            BookFlightFault fault = new BookFlightFault();
-           fault.setMessage("Error in order flight");
+           fault.setMessage("Cannot find the booking number");
            throw new BookFlightFaultMessage("Error",fault); 
+        }
+        else
+        {
+            try {
+                int price = choosenFlightInfo.getPrice();
+                toReturn = chargeCreditCard(GROUPNUMBER,creditcard,price,ACCOUNT);
+                BOOKEDFLIGHTS.add(choosenFlightInfo.getBookingNumber());
+            } catch (CreditCardFaultMessage ex) {
+                BookFlightFault fault = new BookFlightFault();
+                fault.setMessage("Error in paying for the order");
+                throw new BookFlightFaultMessage("Error",fault); 
+            }
         }
         return toReturn;
     }
@@ -69,6 +103,33 @@ public class AirlineReservation {
     private boolean validateCreditCard(int group, dk.dtu.imm.fastmoney.types.CreditCardInfoType creditCardInfo, int amount) throws CreditCardFaultMessage {
         dk.dtu.imm.fastmoney.BankPortType port = service.getBankPort();
         return port.validateCreditCard(group, creditCardInfo, amount);
+    }
+    
+    //Generate flight information
+    private void generateFLightInformation()
+    {
+        DatatypeFactory df;
+        try {
+            df = DatatypeFactory.newInstance();
+        } catch (DatatypeConfigurationException ex) {
+            return;
+        }
+        FlightInformationType flightInformation = new FlightInformationType();
+        FlightType flight = new FlightType();
+        
+        XMLGregorianCalendar date = df.newXMLGregorianCalendar("2013-12-25");
+        flightInformation.setBookingNumber(12345);
+        flightInformation.setReservationServiceName("SAS");
+        flightInformation.setPrice(1200);
+        flight.setCarrier("Scandinavians Airlines");
+        flight.setStart("Moscow");
+        flight.setEnd("Berlin");
+        
+        flight.setDateStart(date);
+        flight.setDateEnd(date);
+        flightInformation.setFlight(flight);
+
+        FLIGHTS.add(flightInformation);
     }
     
 }

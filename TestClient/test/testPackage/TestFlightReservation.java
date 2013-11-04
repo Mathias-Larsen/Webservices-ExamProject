@@ -32,7 +32,7 @@ public class TestFlightReservation {
     @Test
     public void testBookAirlineReservation() {
         try {
-            boolean toReturn = bookFlight(10,creditcard);
+            boolean toReturn = bookFlight(12345,creditcard);
             assertEquals(true,toReturn);
         } catch (BookFlightFaultMessage ex) {
             assertEquals("Error in order flight",ex.getFaultInfo().getMessage());
