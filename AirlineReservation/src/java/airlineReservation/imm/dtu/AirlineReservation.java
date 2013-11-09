@@ -47,8 +47,15 @@ public class AirlineReservation {
     }
     
     public List<FlightInformationType> getFlights(String start, String end, XMLGregorianCalendar date) {
-        //TODO implement this method
-        throw new UnsupportedOperationException("Not implemented yet.");
+        ArrayList<FlightInformationType> output = new ArrayList<FlightInformationType>();
+        for(FlightInformationType flightInfo : FLIGHTS)
+        {
+            if(flightInfo.getFlight().getStart().equals(start) && flightInfo.getFlight().getEnd().equals(end) && flightInfo.getFlight().getDateStart().equals(date))
+            {
+                output.add(flightInfo);
+            }
+        }
+        return output;
     }
 
     public boolean bookFlight(int bookingNumber, CreditCardInfoType creditcard) throws BookFlightFaultMessage {
@@ -60,6 +67,7 @@ public class AirlineReservation {
             if(flightInfo.getBookingNumber()==bookingNumber)
             {
                choosenFlightInfo = flightInfo;
+               break; // breakede her fordi den ikke behøver køre resten igennem
             }
         }
         if(choosenFlightInfo==null)
