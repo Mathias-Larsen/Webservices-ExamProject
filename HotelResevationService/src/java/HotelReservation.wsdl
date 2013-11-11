@@ -5,41 +5,7 @@
     xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://j2ee.netbeans.org/wsdl/HotelResevationService/java/newWSDL" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype">
     <types>
         <xsd:schema targetNamespace="http://j2ee.netbeans.org/wsdl/HotelResevationService/java/newWSDL" xmlns:tns="http://j2ee.netbeans.org/wsdl/HotelResevationService/java/newWSDL">
-            <xsd:complexType name="hotelBookingType">
-                <xsd:sequence>
-                    <xsd:element name="name" type="xsd:string"></xsd:element>
-                    <xsd:element name="hotelAddress" type="tns:address"></xsd:element>
-                    <xsd:element name="bookingNumber" type="xsd:string"></xsd:element>
-                    <xsd:element name="price" type="xsd:string"></xsd:element>
-                    <xsd:element name="creditCardReq" type="xsd:boolean"></xsd:element>
-                    <xsd:element name="hotelResServiceName" type="xsd:string"></xsd:element>
-                </xsd:sequence>
-            </xsd:complexType>
-            <xsd:complexType name="addressType">
-                <xsd:sequence>
-                    <xsd:element name="street" type="xsd:string"></xsd:element>
-                    <xsd:element name="city" type="xsd:string"></xsd:element>
-                    <xsd:element name="zip" type="xsd:string"></xsd:element>
-                    <xsd:element name="country" type="xsd:string"></xsd:element>
-                </xsd:sequence>
-            </xsd:complexType>
-            <xsd:complexType name="creditcardType">
-                <xsd:sequence>
-                    <xsd:element name="holderName" type="xsd:string"></xsd:element>
-                    <xsd:element name="cardNumber" type="xsd:string"></xsd:element>
-                    <xsd:element name="expDate" type="xsd:date"></xsd:element>
-                </xsd:sequence>
-            </xsd:complexType>
-            <xsd:element name="Request">
-                <xsd:complexType>
-                    <xsd:sequence/>
-                </xsd:complexType>
-            </xsd:element>
-            <xsd:element name="Response">
-                <xsd:complexType>
-                    <xsd:sequence/>
-                </xsd:complexType>
-            </xsd:element>
+            <xsd:import namespace="urn://types.hotelReservation.imm.dtu.dk" schemaLocation="HotelReservationTypes.xsd"/>
         </xsd:schema>
     </types>
     <message name="getHotelsRequest">
@@ -71,11 +37,20 @@
     <message name="CancelHotelFault">
         <part name="cancelFault" type="xsd:string"/>
     </message>
+    <message name="HotelReservationOperation">
+        <part name="part1" type="xsd:string"/>
+    </message>
+    <message name="HotelReservationOperationResponse">
+        <part name="part1" type="xsd:string"/>
+    </message>
+    <message name="getHotels">
+        <part xmlns:ns1="urn://types.hotelReservation.imm.dtu.dk" name="parametersGetHotels" element="ns1:getHotels"/>
+    </message>
+    <message name="getHotelsResponse">
+        <part xmlns:ns2="urn://types.hotelReservation.imm.dtu.dk" name="returnGetHotels" element="ns2:getHotelsResponse"/>
+    </message>
+            
     <portType name="HotelReservationPortType">
-        <operation name="getHotels">
-            <input name="input1" message="tns:getHotelsRequest"/>
-            <output name="output1" message="tns:getHotelsResponse"/>
-        </operation>
         <operation name="bookHotel">
             <input name="input2" message="tns:BookingOperationRequest"/>
             <output name="output2" message="tns:BookingOperationResponse"/>
@@ -85,6 +60,10 @@
             <input name="input3" message="tns:CancelHotelOperationRequest"/>
             <output name="output3" message="tns:CancelHotelOperationResponse"/>
             <fault name="fault1" message="tns:CancelHotelFault"/>
+        </operation>
+        <operation name="getHotels">
+            <input name="getHotelsRequest" message="tns:getHotels"/>
+            <output name="getHotelsResponse" message="tns:getHotelsResponse"/>
         </operation>
     </portType>
     <plnk:partnerLinkType name="HotelReservation">

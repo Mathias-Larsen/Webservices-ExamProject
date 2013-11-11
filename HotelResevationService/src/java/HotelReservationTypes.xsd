@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="urn://types.hotelReservation.imm.dtu.dk"
+    xmlns:tns="urn://types.hotelReservation.imm.dtu.dk"
+    elementFormDefault="qualified">
+    <xsd:complexType name="hotelBookingType">
+        <xsd:sequence>
+            <xsd:element name="name" type="xsd:string"></xsd:element>
+            <xsd:element name="hotelAddress" type="tns:addressType"></xsd:element>
+            <xsd:element name="bookingNumber" type="xsd:string"></xsd:element>
+            <xsd:element name="price" type="xsd:string"></xsd:element>
+            <xsd:element name="creditCardReq" type="xsd:boolean"></xsd:element>
+            <xsd:element name="hotelResServiceName" type="xsd:string"></xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="addressType">
+        <xsd:sequence>
+            <xsd:element name="street" type="xsd:string"></xsd:element>
+            <xsd:element name="city" type="xsd:string"></xsd:element>
+            <xsd:element name="zip" type="xsd:string"></xsd:element>
+            <xsd:element name="country" type="xsd:string"></xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="creditCardType">
+        <xsd:sequence>
+            <xsd:element name="holderName" type="xsd:string"></xsd:element>
+            <xsd:element name="cardNumber" type="xsd:string"></xsd:element>
+            <xsd:element name="expDate" type="xsd:date"></xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="getHotels">
+        <xsd:sequence>
+            <xsd:element name="arrivalDate" type="xsd:date"></xsd:element>
+            <xsd:element name="departureDate" type="xsd:date"></xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="hotelInfoType">
+        <xsd:sequence>
+            <xsd:element name="hotelName" type="xsd:string"></xsd:element>
+            <xsd:element name="address" type="tns:addressType"></xsd:element>
+            <xsd:element name="bookingNumber" type="xsd:string"></xsd:element>
+            <xsd:element name="price" type="xsd:string"></xsd:element>
+            <xsd:element name="creditCardGuaranteeRequired" type="xsd:boolean"></xsd:element>
+            <xsd:element name="nameOfHotelReservationService" type="xsd:string"></xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="hotelInfoArray">
+        <xsd:sequence>
+            <xsd:element name="hotelInfoArray" type="tns:hotelInfoType" maxOccurs="unbounded" minOccurs="0"></xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="bookHotel">
+        <xsd:sequence>
+            <xsd:element name="bookingNumber" type="xsd:string"></xsd:element>
+            <xsd:element name="creditCardInfo" type="tns:creditCardType"></xsd:element>
+            <xsd:element name="creditCardGuaranteeRequired" type="xsd:boolean"></xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="bookHotelResponse">
+        <xsd:sequence>
+            <xsd:element name="success" type="xsd:boolean"></xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="bookHotelFault">
+        <xsd:sequence>
+            <xsd:element name="message" type="xsd:string"></xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="cancelHotel">
+        <xsd:sequence/>
+    </xsd:complexType>
+</xsd:schema>
