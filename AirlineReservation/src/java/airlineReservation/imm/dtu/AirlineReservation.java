@@ -8,6 +8,7 @@ package airlineReservation.imm.dtu;
 import dk.dtu.imm.airlinereservation.BookFlightFaultMessage;
 import dk.dtu.imm.airlinereservation.CancelFlightFaultMessage;
 import dk.dtu.imm.airlinereservation.types.BookFlightFault;
+import dk.dtu.imm.airlinereservation.types.CancelFlightFault;
 import java.util.List;
 import javax.jws.WebService;
 import dk.dtu.imm.airlinereservation.types.FlightInformationType;
@@ -40,15 +41,22 @@ public class AirlineReservation {
     
     public AirlineReservation()
     {
-        ACCOUNT = new AccountType();//GENERATE THE LAMEDUCK ACCOUNT
+        ACCOUNT = new AccountType();//GENERATE THE LAMEDUCK ACCOUNT WHICH IS USED IN THE BANK SERVICE
         ACCOUNT.setName("LameDuck");
         ACCOUNT.setNumber("50208812");
         generateFLightInformation(); //GENERATE INFORMATION
     }
     
     public List<FlightInformationType> getFlights(String start, String end, XMLGregorianCalendar date) {
-        //TODO implement this method
-        throw new UnsupportedOperationException("Not implemented yet.");
+        ArrayList<FlightInformationType> output = new ArrayList<FlightInformationType>();
+        for(FlightInformationType flightInfo : FLIGHTS)
+        {
+            if(flightInfo.getFlight().getStart().equals(start) && flightInfo.getFlight().getEnd().equals(end) && flightInfo.getFlight().getDateStart().equals(date))
+            {
+                output.add(flightInfo);
+            }
+        }
+        return output;
     }
 
     public boolean bookFlight(int bookingNumber, CreditCardInfoType creditcard) throws BookFlightFaultMessage {
@@ -60,6 +68,7 @@ public class AirlineReservation {
             if(flightInfo.getBookingNumber()==bookingNumber)
             {
                choosenFlightInfo = flightInfo;
+               break; 
             }
         }
         if(choosenFlightInfo==null)
@@ -84,23 +93,45 @@ public class AirlineReservation {
     }
 
     public boolean cancelFlight(int bookingNumber, CreditCardInfoType creditcard) throws CancelFlightFaultMessage {
-        //TODO implement this method
-        throw new UnsupportedOperationException("Not implemented yet.");
+       
+        try {
+            boolean toReturn;
+            FlightInformationType flight = null;
+            
+            for(FlightInformationType flightInfo : FLIGHTS)
+                {
+                    if(flightInfo.getBookingNumber()==bookingNumber)
+                    {
+                        flight = flightInfo;
+                        break;
+                    }
+                }
+            int price = flight.getPrice();
+            int refund = price/2;
+            toReturn = refundCreditCard(GROUPNUMBER, creditcard, refund, ACCOUNT);
+            return toReturn;
+        }
+        catch (Exception ex){
+           CancelFlightFault fault = new CancelFlightFault();
+           fault.setMessage("Cancellation of Flight failed: " + ex);
+           throw new CancelFlightFaultMessage("Cancel failed", fault);
+        }
+    
     }
 
     
     //The following methods are calling the bank webservice
-    private boolean chargeCreditCard(int group, dk.dtu.imm.fastmoney.types.CreditCardInfoType creditCardInfo, int amount, dk.dtu.imm.fastmoney.types.AccountType account) throws CreditCardFaultMessage {
+    private boolean chargeCreditCard(int group, CreditCardInfoType creditCardInfo, int amount, AccountType account) throws CreditCardFaultMessage {
         dk.dtu.imm.fastmoney.BankPortType port = service.getBankPort();
         return port.chargeCreditCard(group, creditCardInfo, amount, account);
     }
 
-    private boolean refundCreditCard(int group, dk.dtu.imm.fastmoney.types.CreditCardInfoType creditCardInfo, int amount, dk.dtu.imm.fastmoney.types.AccountType account) throws CreditCardFaultMessage {
+    private boolean refundCreditCard(int group, CreditCardInfoType creditCardInfo, int amount, AccountType account) throws CreditCardFaultMessage {
         dk.dtu.imm.fastmoney.BankPortType port = service.getBankPort();
         return port.refundCreditCard(group, creditCardInfo, amount, account);
     }
 
-    private boolean validateCreditCard(int group, dk.dtu.imm.fastmoney.types.CreditCardInfoType creditCardInfo, int amount) throws CreditCardFaultMessage {
+    private boolean validateCreditCard(int group, CreditCardInfoType creditCardInfo, int amount) throws CreditCardFaultMessage {
         dk.dtu.imm.fastmoney.BankPortType port = service.getBankPort();
         return port.validateCreditCard(group, creditCardInfo, amount);
     }
@@ -114,10 +145,11 @@ public class AirlineReservation {
         } catch (DatatypeConfigurationException ex) {
             return;
         }
+        XMLGregorianCalendar date = df.newXMLGregorianCalendar("2013-12-25");
         FlightInformationType flightInformation = new FlightInformationType();
         FlightType flight = new FlightType();
         
-        XMLGregorianCalendar date = df.newXMLGregorianCalendar("2013-12-25");
+        
         flightInformation.setBookingNumber(12345);
         flightInformation.setReservationServiceName("SAS");
         flightInformation.setPrice(1200);
