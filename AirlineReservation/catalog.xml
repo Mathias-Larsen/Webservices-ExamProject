@@ -4,4 +4,6 @@
     <system systemId="file:/C:/Users/Jesper/Documents/AirlineReservation/src/java/AirlineReservation.wsdl" uri="src/conf/xml-resources/web-services/AirlineReservation/wsdl/AirlineReservation.wsdl"/>
     <system systemId="file:/C:/Users/Jesper/Documents/AirlineReservation/src/java/AirlineReservationTypes.xsd" uri="src/conf/xml-resources/web-services/AirlineReservation/wsdl/AirlineReservationTypes.xsd"/>
     <system systemId="http://fastmoney.imm.dtu.dk:8080/BankService?xsd=1" uri="src/conf/xml-resources/web-services/AirlineReservation/wsdl/fastmoney.imm.dtu.dk_8080/BankService.xsd_1.xsd"/>
+    <system systemId="file:/C:/Users/Mathias/Documents/GitHub/Webservices-ExamProject/HotelResevationService/src/java/HotelReservation.wsdl" uri="src/conf/xml-resources/web-services/HotelReservation/wsdl/HotelReservation.wsdl"/>
+    <system systemId="file:/C:/Users/Mathias/Documents/GitHub/Webservices-ExamProject/HotelResevationService/src/java/HotelReservationTypes.xsd" uri="src/conf/xml-resources/web-services/HotelReservation/wsdl/HotelReservationTypes.xsd"/>
 </catalog>

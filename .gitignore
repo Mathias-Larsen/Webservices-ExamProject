@@ -6,3 +6,4 @@
 *.ear
 /AirlineReservastionClient/build/
 /AirlineReservastionClient/nbproject/private/
+/HotelResevationService/build/
