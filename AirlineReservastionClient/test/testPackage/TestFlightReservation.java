@@ -43,7 +43,7 @@ public class TestFlightReservation {
         String start = "Moscow";
         String end = "Berlin";
         int num = getFlights(start,end,date).size();
-        assertEquals(1,num);
+        assertEquals(2,num);
     }   
     @Test
     public void testBookAirlineReservation() {

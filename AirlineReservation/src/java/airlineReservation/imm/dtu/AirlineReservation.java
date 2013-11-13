@@ -62,6 +62,7 @@ public class AirlineReservation {
     public boolean bookFlight(int bookingNumber, CreditCardInfoType creditcard) throws BookFlightFaultMessage {
 
         boolean toReturn;
+        System.out.println("bookedflight"+ bookingNumber);
         FlightInformationType choosenFlightInfo = null;
         for(FlightInformationType flightInfo : FLIGHTS)
         {
@@ -161,6 +162,20 @@ public class AirlineReservation {
         flight.setDateEnd(date);
         flightInformation.setFlight(flight);
 
+        FLIGHTS.add(flightInformation);
+        
+        flightInformation = new FlightInformationType();
+        flight = new FlightType();
+        flightInformation.setBookingNumber(54321);
+        flightInformation.setReservationServiceName("SAS");
+        flightInformation.setPrice(1200);
+        flight.setCarrier("Scandinavians Airlines");
+        flight.setStart("Moscow");
+        flight.setEnd("Berlin");
+        
+        flight.setDateStart(date);
+        flight.setDateEnd(date);
+        flightInformation.setFlight(flight);
         FLIGHTS.add(flightInformation);
     }
     
