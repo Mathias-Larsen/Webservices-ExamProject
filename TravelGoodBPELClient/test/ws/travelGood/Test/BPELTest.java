@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package ws.travelGood.Test;
 
 import dk.dtu.imm.airlinereservation.types.FlightInfoArray;
@@ -21,7 +17,11 @@ import ws.travelgood.ItineraryType;
  */
 public class BPELTest {
     CreditCardInfoType creditcard;
-    ExpirationDateType ex;    
+    ExpirationDateType ex;
+    XMLGregorianCalendar date;
+    String start;
+    String end;
+    
     @Before
     public void create()
     {
@@ -32,39 +32,82 @@ public class BPELTest {
        creditcard.setName("Anne Strandberg");
        creditcard.setNumber("50408816");
        creditcard.setExpirationDate(ex);
-    }
-    
-    public BPELTest() {
-    }
-   //@Test
-    public void createTwoItinerarys() {
-        boolean ok =  createItinerary(1, 2);
-        assertEquals(true,ok);
-        boolean ok1 = cancelPlanning(1,2);
-        assertEquals(true,ok1);
-        boolean ok2 =  createItinerary(1, 2);
-        assertEquals(true,ok2);
-    }
-   @Test
-    public void testGetflights() {
-        boolean ok =  createItinerary(1, 2);
-        assertEquals(true,ok);
-       DatatypeFactory df;
+       
+        DatatypeFactory df;
         try {
             df = DatatypeFactory.newInstance();
         } catch (DatatypeConfigurationException ex) {
             return;
         }
-        XMLGregorianCalendar date = df.newXMLGregorianCalendar("2013-12-25");
-        String start = "Moscow";
-        String end = "Berlin";
+        date = df.newXMLGregorianCalendar("2013-12-25");
+        start = "Moscow";
+        end = "Berlin";
+    }
+    
+    public BPELTest() {
+    }
+
+    @Test
+    public void P1()
+    {
+        boolean ok =  createItinerary(1, 2);
+        assertEquals(true,ok);
         //Get flight 
         FlightInfoArray info = getFlights(start,end,date,1,2);
-        assertEquals(2,info.getFlightInformation().size());
+        assertEquals(3,info.getFlightInformation().size());
+        
+       //adding the two flights
+       boolean ok2 = addFlight(info.getFlightInformation().get(0).getBookingNumber(), 1, 2);
+       boolean ok3 = addFlight(info.getFlightInformation().get(0).getBookingNumber(), 1, 2);
+       boolean ok4 = addFlight(1, 1, 2);
+       boolean ok5 = addFlight(info.getFlightInformation().get(0).getBookingNumber(), 1, 2);
+       assertEquals(true,ok2);
+       assertEquals(true,ok3);
+       assertEquals(true,ok4);
+       assertEquals(true,ok5);
+       
+       //Getting the itinerary
+       ItineraryType itinerary = getItinerary(1, 2);
+       assertEquals(4,itinerary.getFlight().size());
+       for (ws.travelgood.BookingType fl : itinerary.getFlight())
+       {
+           assertEquals("unconfirmed",fl.getStatus());
+       }
+       //Book the itinerary
+       boolean book =  bookItinerary(1,creditcard,2);
+       assertEquals(false,book);
+       
+   
+       //Getting the itinerary and check that it is "confirmed"
+       itinerary = getItinerary(1, 2);
+       assertEquals(4,itinerary.getFlight().size());
+       /*
+       for (ws.travelgood.BookingType fl : itinerary.getFlight())
+       {
+           assertEquals("confirmed",fl.getStatus());
+       }    
+       */
+       
+       assertEquals("cancelled",itinerary.getFlight().get(0).getStatus());
+       assertEquals("cancelled",itinerary.getFlight().get(1).getStatus());
+       assertEquals("unconfirmed",itinerary.getFlight().get(2).getStatus());
+       assertEquals("unconfirmed",itinerary.getFlight().get(3).getStatus());
+      // ok = cancelItinerary(1,2,creditcard);
+      //assertEquals(true,ok);
+       
+       
+    }
+   //@Test
+    public void testGetflights() {
+        boolean ok =  createItinerary(1, 2);
+        assertEquals(true,ok);
+        //Get flight 
+        FlightInfoArray info = getFlights(start,end,date,1,2);
+        assertEquals(3,info.getFlightInformation().size());
        
        //adding the two flights
        boolean ok2 = addFlight(info.getFlightInformation().get(0).getBookingNumber(), 1, 2);
-       boolean ok3 = addFlight(info.getFlightInformation().get(1).getBookingNumber(), 1, 2);
+       boolean ok3 = addFlight(1, 1, 2);
        assertEquals(true,ok2);
        assertEquals(true,ok3);
        
@@ -75,24 +118,29 @@ public class BPELTest {
        //Checking the two flights consits with the itinerary
        assertEquals(info.getFlightInformation().get(0).getBookingNumber(),itinerary.getFlight().get(0).getBookingNumber());
        assertEquals("unconfirmed",itinerary.getFlight().get(0).getStatus());
-       System.out.println(itinerary.getFlight().get(0).getBookingNumber());
        
-       assertEquals(info.getFlightInformation().get(1).getBookingNumber(),itinerary.getFlight().get(1).getBookingNumber());
+       assertEquals(1,itinerary.getFlight().get(1).getBookingNumber());
        assertEquals("unconfirmed",itinerary.getFlight().get(1).getStatus());
-       System.out.println(itinerary.getFlight().get(1).getBookingNumber());
-       
        
        //Book the itinerary
        boolean book =  bookItinerary(1,creditcard,2);
-       assertEquals(true,book);
-       
+       assertEquals(false,book);
+   
        //Getting the itinerary and check that it is "confirmed"
        itinerary = getItinerary(1, 2);
-       assertEquals(2,itinerary.getFlight().size());       
-       assertEquals("confirmed",itinerary.getFlight().get(0).getStatus());
-       assertEquals("confirmed",itinerary.getFlight().get(1).getStatus());
+       assertEquals(2,itinerary.getFlight().size());
        
+       assertEquals("cancelled",itinerary.getFlight().get(0).getStatus());
+       assertEquals("unconfirmed",itinerary.getFlight().get(1).getStatus());
        
+     /* 
+       for (ws.travelgood.BookingType fl : itinerary.getFlight())
+       {
+           assertEquals("confirmed",fl.getStatus());
+       }
+     */
+      // ok = cancelItinerary(1,2,creditcard);
+      // assertEquals(true,ok);
     }
     private static boolean createItinerary(int customerId, int bookingNumber) {
         ws.travelgood.TravelGoodService service = new ws.travelgood.TravelGoodService();

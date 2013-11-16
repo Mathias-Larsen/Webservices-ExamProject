@@ -95,18 +95,30 @@ public class AirlineReservation {
 
     public boolean cancelFlight(int bookingNumber, CreditCardInfoType creditcard) throws CancelFlightFaultMessage {
        
-        try {
-            boolean toReturn;
-            FlightInformationType flight = null;
+        if(bookingNumber==54)
+        {
+           CancelFlightFault fault = new CancelFlightFault();
+           fault.setMessage("Cancellation of Flight failed ");
+           throw new CancelFlightFaultMessage("Cancel failed", fault);
+        }
+        boolean toReturn;
+        FlightInformationType flight = null;
             
-            for(FlightInformationType flightInfo : FLIGHTS)
-                {
-                    if(flightInfo.getBookingNumber()==bookingNumber)
-                    {
-                        flight = flightInfo;
-                        break;
-                    }
-                }
+        for(FlightInformationType flightInfo : FLIGHTS)
+        {
+            if(flightInfo.getBookingNumber()==bookingNumber)
+            {
+                flight = flightInfo;
+                break;
+            }
+        }
+        if(flight==null)
+        {
+            CancelFlightFault fault = new CancelFlightFault();
+            fault.setMessage("Flight not found, cant cancel");
+            throw new CancelFlightFaultMessage("Cancel failed", fault);
+        }
+        try {
             int price = flight.getPrice();
             int refund = price/2;
             toReturn = refundCreditCard(GROUPNUMBER, creditcard, refund, ACCOUNT);
@@ -167,6 +179,20 @@ public class AirlineReservation {
         flightInformation = new FlightInformationType();
         flight = new FlightType();
         flightInformation.setBookingNumber(54321);
+        flightInformation.setReservationServiceName("SAS");
+        flightInformation.setPrice(1200);
+        flight.setCarrier("Scandinavians Airlines");
+        flight.setStart("Moscow");
+        flight.setEnd("Berlin");
+        
+        flight.setDateStart(date);
+        flight.setDateEnd(date);
+        flightInformation.setFlight(flight);
+        FLIGHTS.add(flightInformation);
+        
+        flightInformation = new FlightInformationType();
+        flight = new FlightType();
+        flightInformation.setBookingNumber(54);
         flightInformation.setReservationServiceName("SAS");
         flightInformation.setPrice(1200);
         flight.setCarrier("Scandinavians Airlines");
