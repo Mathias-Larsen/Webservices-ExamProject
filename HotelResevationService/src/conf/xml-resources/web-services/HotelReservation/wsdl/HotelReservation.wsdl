@@ -26,8 +26,11 @@
     <message name="cancelHotel">
         <part xmlns:ns5="urn://types.hotelReservation.imm.dtu.dk" name="parametersCancelHotel" element="ns5:cancelHotel"/>
     </message>
+    <message name="cancelHotelResponse">
+        <part xmlns:ns6="urn://types.hotelReservation.imm.dtu.dk" name="returnCancelHotel" elemenet="ns6:cancelHotelResponse"/>
+    </message>   
     <message name="cancelHotelFaultMessage">
-        <part xmlns:ns6="urn://types.hotelReservation.imm.dtu.dk" name="faultCancelHotel" element="ns6:cancelHotelFault"/>
+        <part xmlns:ns7="urn://types.hotelReservation.imm.dtu.dk" name="faultCancelHotel" element="ns7:cancelHotelFault"/>
     </message>
     <portType name="HotelReservationPortType">
         <operation name="getHotels">
@@ -41,7 +44,8 @@
         </operation>
         <operation name="cancelHotel">
             <input name="cancelHotelRequest" message="tns:cancelHotel"/>
-            <output name="faultCancelHotel" message="tns:cancelHotelFaultMessage"/>
+            <output name="cancelHotelResponse" message="tns:cancelHotelResponse"/>
+            <fault name="cancelHotelFaultMessage" message="tns:cancelHotelFaultMessage"/>
         </operation>
     </portType>
     <binding name="HotelReservationPortTypeBinding" type="tns:HotelReservationPortType">
@@ -72,9 +76,12 @@
             <input name="cancelHotelRequest">
                 <soap:body use="literal"/>
             </input>
-            <output name="faultCancelHotel">
+            <output name="cancelHotelResponse">
                 <soap:body use="literal"/>
             </output>
+            <fault name="cancelHotelFaultMessage">
+                <soap:fault name="cancelHotelFaultMessage" use="literal"/>
+            </fault>
         </operation>
     </binding>
     <service name="HotelReservationService">

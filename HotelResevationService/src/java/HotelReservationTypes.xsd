@@ -11,6 +11,7 @@
     <xsd:element name="bookHotelResponse" nillable="true" type="tns:bookHotelResponse"/>
     <xsd:element name="bookHotelFault" nillable="true" type="tns:bookHotelFault"/>
     <xsd:element name="cancelHotel" nillable="true" type="tns:cancelHotel"/>
+    <xsd:element name="cancelHotelResponse" nillable="true" type="tns:cancelHotelResponse"/>
     <xsd:element name="cancelHotelFault" nillable="true" type="tns:cancelHotelFault"/>
     
     <xsd:complexType name="hotelBookingType">
@@ -81,6 +82,11 @@
         <xsd:sequence>
             <xsd:element name="bookingNumber" type="xsd:int"></xsd:element>
             <xsd:element name="creditCard" type="tns:creditCardInfoType"></xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="cancelHotelResponse">
+        <xsd:sequence>
+            <xsd:element name="success" type="xsd:boolean"/>
         </xsd:sequence>
     </xsd:complexType>
     <xsd:complexType name="cancelHotelFault">

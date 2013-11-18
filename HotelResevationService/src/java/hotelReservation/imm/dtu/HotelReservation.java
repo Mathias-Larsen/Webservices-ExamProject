@@ -10,6 +10,7 @@ import dk.dtu.imm.hotelreservation.types.BookHotelFault;
 import dk.dtu.imm.hotelreservation.types.BookHotelResponse;
 import dk.dtu.imm.hotelreservation.types.CancelHotel;
 import dk.dtu.imm.hotelreservation.types.CancelHotelFault;
+import dk.dtu.imm.hotelreservation.CancelHotelFaultMessage;
 import dk.dtu.imm.hotelreservation.types.ExpirationDateType;
 import dk.dtu.imm.hotelreservation.types.GetHotels;
 import dk.dtu.imm.hotelreservation.types.HotelBookingType;
@@ -93,7 +94,7 @@ public class HotelReservation {
         return success;
     }
 
-    public java.lang.String cancelHotel(int bookingNumber, CreditCardInfoType creditCard) {
+    public boolean cancelHotel(int bookingNumber, CreditCardInfoType creditCard) throws CancelHotelFaultMessage {
         boolean success;
         HotelInfoType hotel = null;
         
@@ -110,7 +111,7 @@ public class HotelReservation {
             CancelHotelFault fault = new CancelHotelFault();
             fault.setMessage("Hotel not found, could not cancel order");
             // The cancel hotel is not constructed with a real fault, just an output
-            //throw new CancelHotelFaultMessage("Error", fault);
+            throw new CancelHotelFaultMessage("Error", fault);
         }
         try {
             int price = hotel.getPrice(); //is changed to an int now
@@ -120,7 +121,7 @@ public class HotelReservation {
         } catch(Exception ex){
             CancelHotelFault fault = new CancelHotelFault();
             fault.setMessage("Cancellation of hotel booking failed: " + ex);
-            //throw new CancelHotelFaultMessage("Cancel failed ", fault);
+            throw new CancelHotelFaultMessage("Cancel failed ", fault);
         }
     }
     
