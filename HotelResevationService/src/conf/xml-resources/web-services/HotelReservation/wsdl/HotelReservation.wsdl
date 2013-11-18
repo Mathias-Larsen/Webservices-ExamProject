@@ -27,7 +27,7 @@
         <part xmlns:ns5="urn://types.hotelReservation.imm.dtu.dk" name="parametersCancelHotel" element="ns5:cancelHotel"/>
     </message>
     <message name="cancelHotelResponse">
-        <part xmlns:ns6="urn://types.hotelReservation.imm.dtu.dk" name="returnCancelHotel" elemenet="ns6:cancelHotelResponse"/>
+        <part xmlns:ns6="urn://types.hotelReservation.imm.dtu.dk" name="returnCancelHotel" element="ns6:cancelHotelResponse"/>
     </message>   
     <message name="cancelHotelFaultMessage">
         <part xmlns:ns7="urn://types.hotelReservation.imm.dtu.dk" name="faultCancelHotel" element="ns7:cancelHotelFault"/>
