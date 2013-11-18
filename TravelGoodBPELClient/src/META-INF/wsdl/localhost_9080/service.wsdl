@@ -64,6 +64,8 @@
   <message name="addFlightRequest">
     <part name="bookingNumber" type="xsd:int">
     </part>
+    <part name="date" type="xsd:date">
+    </part>
     <part name="customerId" type="xsd:int">
     </part>
     <part name="itineraryId" type="xsd:int">

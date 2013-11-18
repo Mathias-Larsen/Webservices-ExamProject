@@ -72,6 +72,7 @@ public interface TravelGoodPortType {
      * @param customerId
      * @param itineraryId
      * @param bookingNumber
+     * @param date
      * @return
      *     returns boolean
      */
@@ -80,6 +81,8 @@ public interface TravelGoodPortType {
     public boolean addFlight(
         @WebParam(name = "bookingNumber", partName = "bookingNumber")
         int bookingNumber,
+        @WebParam(name = "date", partName = "date")
+        XMLGregorianCalendar date,
         @WebParam(name = "customerId", partName = "customerId")
         int customerId,
         @WebParam(name = "itineraryId", partName = "itineraryId")

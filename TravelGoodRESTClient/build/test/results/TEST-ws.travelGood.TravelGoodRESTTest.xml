@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite errors="0" failures="0" hostname="Fujitsu" name="ws.travelGood.TravelGoodRESTTest" tests="5" time="4.623" timestamp="2013-11-16T13:39:23">
+<testsuite errors="0" failures="0" hostname="Fujitsu" name="ws.travelGood.TravelGoodRESTTest" tests="5" time="3.224" timestamp="2013-11-18T14:49:29">
   <properties>
     <property name="libs.jsp-compiler.javadoc" value="" />
     <property name="netbeans.autoupdate.country" value="DK" />
@@ -41,12 +41,10 @@
     <property name="os.name" value="Windows 8" />
     <property name="libs.beans-binding.classpath" value="C:\OpenESB-v2.3\netbeans\java\modules\ext\beansbinding-1.2.1.jar" />
     <property name="ap.proc.none.internal" value="" />
-    <property name="org.whattf.datatype.lang-registry" value="jar:file:/C:/OpenESB-v2.3/netbeans/ide/modules/ext/validator.jar!/nu/validator/localentities/files/www_iana_org_assignments_language_subtag_registry" />
     <property name="libs.restapi.javadoc" value="C:\OpenESB-v2.3\netbeans\enterprise\docs\jsr311-api-1.1.1-javadoc.zip" />
     <property name="libs.JWSAntTasks.maven-pom" value="" />
     <property name="jnlp.signing.keystore" value="" />
     <property name="libs.testng.src" value="" />
-    <property name="nu.validator.spec.alt-advice" value="jar:file:/C:/OpenESB-v2.3/netbeans/ide/modules/ext/validator.jar!/nu/validator/localentities/files/wiki_whatwg_org_wiki_Validator_nu_alt_advice" />
     <property name="libs.spring-webmvc3.0.src" value="" />
     <property name="libs.restapi.classpath" value="C:\OpenESB-v2.3\netbeans\enterprise\modules\ext\rest\jsr311-api-1.1.1.jar" />
     <property name="java.vendor.url.bug" value="http://bugreport.sun.com/bugreport/" />
@@ -60,7 +58,7 @@
     <property name="copylibs.rebase" value="true" />
     <property name="libs.spring-webmvc3.0.maven-pom" value="" />
     <property name="libs.swing-layout.maven-pom" value="" />
-    <property name="sun.java.command" value="org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner ws.travelGood.TravelGoodRESTTest filtertrace=true haltOnError=false haltOnFailure=false showoutput=true outputtoformatters=true logfailedtests=true logtestlistenerevents=true formatter=org.apache.tools.ant.taskdefs.optional.junit.BriefJUnitResultFormatter formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,C:\Users\Jesper\Documents\GitHub\Webservices-ExamProject\TravelGoodRESTClient\build\test\results\TEST-ws.travelGood.TravelGoodRESTTest.xml crashfile=C:\Users\Jesper\Documents\GitHub\Webservices-ExamProject\TravelGoodRESTClient\build\junitvmwatcher6681890449699891197.properties propsfile=C:\Users\Jesper\Documents\GitHub\Webservices-ExamProject\TravelGoodRESTClient\build\junit3151748781308949374.properties" />
+    <property name="sun.java.command" value="org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner ws.travelGood.TravelGoodRESTTest filtertrace=true haltOnError=false haltOnFailure=false showoutput=true outputtoformatters=true logfailedtests=true logtestlistenerevents=true formatter=org.apache.tools.ant.taskdefs.optional.junit.BriefJUnitResultFormatter formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,C:\Users\Jesper\Documents\GitHub\Webservices-ExamProject\TravelGoodRESTClient\build\test\results\TEST-ws.travelGood.TravelGoodRESTTest.xml crashfile=C:\Users\Jesper\Documents\GitHub\Webservices-ExamProject\TravelGoodRESTClient\build\junitvmwatcher3711168567708159663.properties propsfile=C:\Users\Jesper\Documents\GitHub\Webservices-ExamProject\TravelGoodRESTClient\build\junit450502761596339393.properties" />
     <property name="build.classes.dir" value="build/classes" />
     <property name="jnlp.descriptor" value="application" />
     <property name="build.sysclasspath" value="ignore" />
@@ -102,7 +100,7 @@
     <property name="javac.debug" value="true" />
     <property name="javadoc.splitindex" value="true" />
     <property name="file.separator" value="\" />
-    <property name="javac.includesfile.binary" value="C:\Users\Jesper\Documents\GitHub\Webservices-ExamProject\TravelGoodRESTClient\null1607622375" />
+    <property name="javac.includesfile.binary" value="C:\Users\Jesper\Documents\GitHub\Webservices-ExamProject\TravelGoodRESTClient\null128360310" />
     <property name="libs.junit_4.maven-pom" value="" />
     <property name="mkdist.disabled" value="false" />
     <property name="javac.test.processorpath" value="C:\OpenESB-v2.3\netbeans\enterprise\modules\ext\rest\asm-3.1.jar;C:\OpenESB-v2.3\netbeans\enterprise\modules\ext\rest\jackson-core-asl-1.7.1.jar;C:\OpenESB-v2.3\netbeans\enterprise\modules\ext\rest\jackson-jaxrs-1.7.1.jar;C:\OpenESB-v2.3\netbeans\enterprise\modules\ext\rest\jackson-mapper-asl-1.7.1.jar;C:\OpenESB-v2.3\netbeans\enterprise\modules\ext\rest\jackson-xc-1.7.1.jar;C:\OpenESB-v2.3\netbeans\enterprise\modules\ext\rest\jersey-apache-client-1.8.jar;C:\OpenESB-v2.3\netbeans\enterprise\modules\ext\rest\jersey-atom-abdera-1.8.jar;C:\OpenESB-v2.3\netbeans\enterprise\modules\ext\rest\jersey-client-1.8.jar;C:\OpenESB-v2.3\netbeans\enterprise\modules\ext\rest\jersey-core-1.8.jar;C:\OpenESB-v2.3\netbeans\enterprise\modules\ext\rest\jersey-guice-1.8.jar;C:\OpenESB-v2.3\netbeans\enterprise\modules\ext\rest\jersey-json-1.8.jar;C:\OpenESB-v2.3\netbeans\enterprise\modules\ext\rest\jersey-multipart-1.8.jar;C:\OpenESB-v2.3\netbeans\enterprise\modules\ext\rest\jersey-server-1.8.jar;C:\OpenESB-v2.3\netbeans\enterprise\modules\ext\rest\jersey-simple-server-1.8.jar;C:\OpenESB-v2.3\netbeans\enterprise\modules\ext\rest\jersey-spring-1.8.jar;C:\OpenESB-v2.3\netbeans\enterprise\modules\ext\rest\jettison-1.1.jar;C:\OpenESB-v2.3\netbeans\enterprise\modules\ext\rest\oauth-client-1.8.jar;C:\OpenESB-v2.3\netbeans\enterprise\modules\ext\rest\oauth-server-1.8.jar;C:\OpenESB-v2.3\netbeans\enterprise\modules\ext\rest\oauth-signature-1.8.jar;C:\OpenESB-v2.3\netbeans\ide\modules\ext\jaxb\activation.jar;C:\OpenESB-v2.3\netbeans\ide\modules\ext\jaxb\api\jaxb-api.jar;C:\OpenESB-v2.3\netbeans\ide\modules\ext\jaxb\api\jsr173_1.0_api.jar:build/classes:C:\OpenESB-v2.3\netbeans\java\modules\ext\junit-4.10.jar" />
@@ -146,7 +144,6 @@
     <property name="libs.JAXB-ENDORSED.maven-pom" value="" />
     <property name="libs.spring-framework.classpath" value="C:\OpenESB-v2.3\netbeans\ide\modules\org-apache-commons-logging.jar;C:\OpenESB-v2.3\netbeans\java\modules\ext\cglib-2.2.jar;C:\OpenESB-v2.3\netbeans\java\modules\ext\spring\spring-2.5.6.SEC03.jar" />
     <property name="libs.eclipselink.maven-pom" value="" />
-    <property name="org.whattf.datatype.charset-registry" value="jar:file:/C:/OpenESB-v2.3/netbeans/ide/modules/ext/validator.jar!/nu/validator/localentities/files/www_iana_org_assignments_character_sets" />
     <property name="application.vendor" value="Jesper" />
     <property name="manifest.available" value="true" />
     <property name="libs.primefaces.javadoc" value="" />
@@ -247,7 +244,7 @@
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment" />
     <property name="ant.project.name" value="TravelGoodRESTClient" />
     <property name="libs.PojoSELib.javadoc" value="C:\OpenESB-v2.3\netbeans\soa\modules\ext\sun-pojo-engine-api-javadoc.jar" />
-    <property name="netbeans.hash.code" value="unique=NB_GLASSFISH0aa59d2d7-bc74-4b48-aacb-9d2379fe8cc9_5ec8db64-8ee2-4770-8d05-9c24d9baadc2" />
+    <property name="netbeans.hash.code" value="unique=NB_GLASSFISH0aa59d2d7-bc74-4b48-aacb-9d2379fe8cc9_76946329-fe6a-4b6c-96c0-3431876fa30d" />
     <property name="netbeans.default_userdir_root" value="" />
     <property name="libs.jsp-compilation-syscp.maven-pom" value="" />
     <property name="manifest.available-mkdist.available" value="true" />
@@ -269,7 +266,6 @@
     <property name="libs.absolutelayout.javadoc" value="" />
     <property name="guice.disable.misplaced.annotation.check" value="true" />
     <property name="java.specification.name" value="Java Platform API Specification" />
-    <property name="nu.validator.spec.microsyntax-descriptions" value="jar:file:/C:/OpenESB-v2.3/netbeans/ide/modules/ext/validator.jar!/nu/validator/localentities/files/wiki_whatwg_org_wiki_MicrosyntaxDescriptions" />
     <property name="libs.Encoder-COCO.maven-pom" value="" />
     <property name="ide.module.install.dir" value="C:\OpenESB-v2.3\netbeans\ide\modules" />
     <property name="jnlp.mixed.code" value="default" />
@@ -305,8 +301,8 @@
     <property name="line.separator" value="&#xd;&#xa;" />
     <property name="libs.hibernate-persistence.src" value="" />
     <property name="java.specification.version" value="1.7" />
-    <property name="java.vm.info" value="mixed mode" />
     <property name="libs.jaxws21.maven-pom" value="" />
+    <property name="java.vm.info" value="mixed mode" />
     <property name="nb.registration.enabled" value="false" />
     <property name="nb.junit.batch" value="true" />
     <property name="junit.forkmode" value="perTest" />
@@ -333,8 +329,8 @@
     <property name="java.awt.printerjob" value="sun.awt.windows.WPrinterJob" />
     <property name="default.javac.source" value="1.7" />
     <property name="debug-transport-by-os" value="dt_shmem" />
-    <property name="sun.jnu.encoding" value="Cp1252" />
     <property name="libs.MySQLDriver.src" value="" />
+    <property name="sun.jnu.encoding" value="Cp1252" />
     <property name="libs.Encoder-COCO.javadoc" value="" />
     <property name="build.test.results.dir" value="build/test/results" />
     <property name="java.runtime.version" value="1.7.0_21-b11" />
@@ -344,8 +340,8 @@
     <property name="user.timezone" value="" />
     <property name="nb.junit.single" value="false" />
     <property name="do.jar" value="true" />
-    <property name="libs.javaee-endorsed-api-6.0.maven-pom" value="" />
     <property name="libs.JAVADB_DRIVER_LABEL.javadoc" value="" />
+    <property name="libs.javaee-endorsed-api-6.0.maven-pom" value="" />
     <property name="netbeans.dirs" value="C:\OpenESB-v2.3\netbeans\soa;C:\OpenESB-v2.3\netbeans\apisupport;C:\OpenESB-v2.3\netbeans\enterprise;C:\OpenESB-v2.3\netbeans\ergonomics;C:\OpenESB-v2.3\netbeans\harness;C:\OpenESB-v2.3\netbeans\ide;C:\OpenESB-v2.3\netbeans\java;C:\OpenESB-v2.3\netbeans\nb;C:\OpenESB-v2.3\netbeans\profiler;C:\OpenESB-v2.3\netbeans\webcommon;C:\OpenESB-v2.3\netbeans\websvccommon" />
     <property name="libs.jsf20.javadoc" value="C:\OpenESB-v2.3\netbeans\enterprise\docs\javaee6-doc-api.zip" />
     <property name="java.ext.dirs" value="C:\Program Files (x86)\Java\jdk1.7.0_21\jre\lib\ext;C:\WINDOWS\Sun\Java\lib\ext" />
@@ -369,8 +365,8 @@
     <property name="libs.restlib.javadoc" value="C:\OpenESB-v2.3\netbeans\enterprise\docs\jersey-1.8-javadoc.zip;C:\OpenESB-v2.3\netbeans\enterprise\docs\jersey-apache-client-1.8-javadoc.zip;C:\OpenESB-v2.3\netbeans\enterprise\docs\jersey-atom-abdera-1.8-javadoc.zip;C:\OpenESB-v2.3\netbeans\enterprise\docs\jersey-guice-1.8-javadoc.zip;C:\OpenESB-v2.3\netbeans\enterprise\docs\jersey-multipart-1.8-javadoc.zip;C:\OpenESB-v2.3\netbeans\enterprise\docs\jersey-simple-server-1.8-javadoc.zip;C:\OpenESB-v2.3\netbeans\enterprise\docs\jersey-spring-1.8-javadoc.zip;C:\OpenESB-v2.3\netbeans\enterprise\docs\oauth-client-1.8-javadoc.zip;C:\OpenESB-v2.3\netbeans\enterprise\docs\oauth-server-1.8-javadoc.zip;C:\OpenESB-v2.3\netbeans\enterprise\docs\oauth-signature-1.8-javadoc.zip" />
     <property name="libs.JAXB-ENDORSED.classpath" value="C:\OpenESB-v2.3\netbeans\ide\modules\ext\jaxb\api\jaxb-api.jar" />
     <property name="libs.eclipselink.classpath" value="C:\OpenESB-v2.3\netbeans\java\modules\ext\eclipselink\eclipselink-2.3.2.jar;C:\OpenESB-v2.3\netbeans\java\modules\ext\eclipselink\javax.persistence-2.0.3.jar;C:\OpenESB-v2.3\netbeans\java\modules\ext\eclipselink\org.eclipse.persistence.jpa.jpql_1.0.1.jar" />
-    <property name="libs.beans-binding.javadoc" value="C:\OpenESB-v2.3\netbeans\java\docs\beansbinding-1.2.1-doc.zip" />
     <property name="java.awt.graphicsenv" value="sun.awt.Win32GraphicsEnvironment" />
+    <property name="libs.beans-binding.javadoc" value="C:\OpenESB-v2.3\netbeans\java\docs\beansbinding-1.2.1-doc.zip" />
     <property name="ant.file.type.TravelGoodRESTClient-impl" value="file" />
     <property name="java.vm.vendor" value="Oracle Corporation" />
     <property name="libs.CopyLibs.classpath" value="C:\OpenESB-v2.3\netbeans\java\ant\extra\org-netbeans-modules-java-j2seproject-copylibstask.jar" />
@@ -386,8 +382,8 @@
     <property name="user.script" value="" />
     <property name="libs.PostgreSQLDriver.classpath" value="C:\OpenESB-v2.3\netbeans\ide\modules\ext\postgresql-9.1-901.jdbc4.jar" />
     <property name="libs.jsf12.maven-pom" value="" />
-    <property name="jnlp.signing" value="" />
     <property name="soa.module.install.dir" value="C:\OpenESB-v2.3\netbeans\soa\modules" />
+    <property name="jnlp.signing" value="" />
     <property name="libs.Encoder-Custom.src" value="" />
     <property name="libs.junit.src" value="" />
     <property name="annotation.processing.source.output" value="build/generated-sources/ap-source-output" />
@@ -399,16 +395,16 @@
     <property name="ant.version" value="Apache Ant(TM) version 1.8.3 compiled on February 26 2012" />
     <property name="file.encoding" value="Cp1252" />
     <property name="build.classes.excludes" value="**/*.java,**/*.form" />
-    <property name="javadoc.nonavbar" value="false" />
     <property name="jdkBug6558476" value="false" />
+    <property name="javadoc.nonavbar" value="false" />
     <property name="platform.active" value="default_platform" />
     <property name="awt.toolkit" value="sun.awt.windows.WToolkit" />
   </properties>
-  <testcase classname="ws.travelGood.TravelGoodRESTTest" name="B" time="1.991" />
-  <testcase classname="ws.travelGood.TravelGoodRESTTest" name="P2" time="0.1" />
-  <testcase classname="ws.travelGood.TravelGoodRESTTest" name="C1" time="0.616" />
-  <testcase classname="ws.travelGood.TravelGoodRESTTest" name="C2" time="0.502" />
-  <testcase classname="ws.travelGood.TravelGoodRESTTest" name="P1" time="0.327" />
+  <testcase classname="ws.travelGood.TravelGoodRESTTest" name="B" time="0.907" />
+  <testcase classname="ws.travelGood.TravelGoodRESTTest" name="P2" time="0.073" />
+  <testcase classname="ws.travelGood.TravelGoodRESTTest" name="P1" time="0.287" />
+  <testcase classname="ws.travelGood.TravelGoodRESTTest" name="C2" time="0.42" />
+  <testcase classname="ws.travelGood.TravelGoodRESTTest" name="C1" time="0.442" />
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
