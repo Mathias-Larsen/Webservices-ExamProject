@@ -18,7 +18,7 @@
             <xsd:element name="name" type="xsd:string"></xsd:element>
             <xsd:element name="hotelAddress" type="tns:addressType"></xsd:element>
             <xsd:element name="bookingNumber" type="xsd:int"></xsd:element>
-            <xsd:element name="price" type="xsd:string"></xsd:element>
+            <xsd:element name="price" type="xsd:int"></xsd:element>
             <xsd:element name="creditCardReq" type="xsd:boolean"></xsd:element>
             <xsd:element name="hotelResServiceName" type="xsd:string"></xsd:element>
         </xsd:sequence>
@@ -40,6 +40,7 @@
     </xsd:complexType>
     <xsd:complexType name="getHotels">
         <xsd:sequence>
+            <xsd:element name="city" type="xsd:string"/>
             <xsd:element name="arrivalDate" type="xsd:date"></xsd:element>
             <xsd:element name="departureDate" type="xsd:date"></xsd:element>
         </xsd:sequence>
@@ -49,7 +50,7 @@
             <xsd:element name="hotelName" type="xsd:string"></xsd:element>
             <xsd:element name="address" type="tns:addressType"></xsd:element>
             <xsd:element name="bookingNumber" type="xsd:int"></xsd:element>
-            <xsd:element name="price" type="xsd:string"></xsd:element>
+            <xsd:element name="price" type="xsd:int"></xsd:element>
             <xsd:element name="creditCardGuaranteeRequired" type="xsd:boolean"></xsd:element>
             <xsd:element name="nameOfHotelReservationService" type="xsd:string"></xsd:element>
         </xsd:sequence>
