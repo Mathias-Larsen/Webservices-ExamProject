@@ -77,7 +77,7 @@ public class BPELTest {
        boolean book =  bookItinerary(1,creditcard,2);
        assertEquals(false,book);
        
-   
+   /*
        //Getting the itinerary and check that it is "confirmed"
        itinerary = getItinerary(1, 2);
        assertEquals(4,itinerary.getFlight().size());
@@ -86,12 +86,13 @@ public class BPELTest {
        {
            assertEquals("confirmed",fl.getStatus());
        }    
-       */
+       
        
        assertEquals("cancelled",itinerary.getFlight().get(0).getStatus());
        assertEquals("cancelled",itinerary.getFlight().get(1).getStatus());
        assertEquals("unconfirmed",itinerary.getFlight().get(2).getStatus());
        assertEquals("unconfirmed",itinerary.getFlight().get(3).getStatus());
+      */
       // ok = cancelItinerary(1,2,creditcard);
       //assertEquals(true,ok);
        
