@@ -4,26 +4,23 @@
  */
 package hotelReservation.imm.dtu;
 
-import dk.dtu.imm.hotelreservation.BookHotelFaultMessage;
-import dk.dtu.imm.hotelreservation.CancelHotelFaultMessage;
-import javax.jws.WebService;
-import java.util.*;
-import dk.dtu.imm.fastmoney.*;
+import dk.dtu.imm.fastmoney.BankService;
+import dk.dtu.imm.fastmoney.CreditCardFaultMessage;
 import dk.dtu.imm.fastmoney.types.AccountType;
 import dk.dtu.imm.fastmoney.types.CreditCardInfoType;
+import dk.dtu.imm.hotelreservation.BookHotelFaultMessage;
+import dk.dtu.imm.hotelreservation.CancelHotelFaultMessage;
 import dk.dtu.imm.hotelreservation.types.BookHotelFault;
+import dk.dtu.imm.hotelreservation.types.CancelHotelFault;
 import dk.dtu.imm.hotelreservation.types.HotelInfoType;
-
+import java.util.ArrayList;
+import javax.jws.WebService;
 
 /**
  *
  * @author Mathias
  */
-@WebService(serviceName = "HotelReservationService", 
-        portName = "HotelReservationPortTypeBindingPort", 
-        endpointInterface = "dk.dtu.imm.hotelreservation.HotelReservationPortType", 
-        targetNamespace = "urn://hotelReservation.imm.dtu.dk", 
-        wsdlLocation = "WEB-INF/wsdl/HotelReservation/HotelReservation.wsdl")
+@WebService(serviceName = "HotelReservationService", portName = "HotelReservationPortTypeBindingPort", endpointInterface = "dk.dtu.imm.hotelreservation.HotelReservationPortType", targetNamespace = "urn://hotelReservation.imm.dtu.dk", wsdlLocation = "WEB-INF/wsdl/HotelReservation/HotelReservation.wsdl")
 public class HotelReservation {
     
     private BankService service = new BankService();
@@ -41,10 +38,10 @@ public class HotelReservation {
     }
 
     public java.util.List<dk.dtu.imm.hotelreservation.types.HotelInfoType> getHotels(java.lang.String city, javax.xml.datatype.XMLGregorianCalendar arrivalDate, javax.xml.datatype.XMLGregorianCalendar departureDate) {
-                ArrayList<HotelInfoType> output = new ArrayList<HotelInfoType>();
+        ArrayList<HotelInfoType> output = new ArrayList<HotelInfoType>();
         for(HotelInfoType hotelInfo : HOTELS)
         {
-            if(hotelInfo.getAddress().equals(city))
+            if(hotelInfo.getAddress().getCity().equals(city))
             {
                 output.add(hotelInfo);
             }
@@ -52,7 +49,7 @@ public class HotelReservation {
         return output;
     }
 
-    public boolean bookHotel(int bookingNumber, dk.dtu.imm.hotelreservation.types.CreditCardInfoType creditCardInfo, boolean creditCardGuaranteeRequired) throws BookHotelFaultMessage {
+    public boolean bookHotel(int bookingNumber, dk.dtu.imm.fastmoney.types.CreditCardInfoType creditCardInfo, boolean creditCardGuaranteeRequired) throws BookHotelFaultMessage {
         boolean success;
         System.out.println("BookedHotel " + bookingNumber);
         HotelInfoType choosenHotelInfo = null;
@@ -72,8 +69,7 @@ public class HotelReservation {
         } 
         else
         {
-            try 
-            {
+            try {
                 int price = choosenHotelInfo.getPrice();
                 success = chargeCreditCard(GROUPNUMBER, creditCardInfo, price, ACCOUNT);
                 BOOKEDHOTELS.add(choosenHotelInfo.getBookingNumber());
@@ -87,12 +83,37 @@ public class HotelReservation {
         return success;
     }
 
-    public boolean cancelHotel(int bookingNumber, dk.dtu.imm.hotelreservation.types.CreditCardInfoType creditCard) throws CancelHotelFaultMessage {
-        //TODO implement this method
-        throw new UnsupportedOperationException("Not implemented yet.");
+    public boolean cancelHotel(int bookingNumber, dk.dtu.imm.fastmoney.types.CreditCardInfoType creditCard) throws CancelHotelFaultMessage {
+        boolean success;
+        HotelInfoType hotel = null;
+        
+        for(HotelInfoType hotelInfo : HOTELS)
+        {
+            if(hotelInfo.getBookingNumber()==bookingNumber)
+            {
+                hotel = hotelInfo;
+                break;
+            }
+        }
+        if(hotel==null)
+        {
+            CancelHotelFault fault = new CancelHotelFault();
+            fault.setMessage("Hotel not found, could not cancel order");
+            throw new CancelHotelFaultMessage("Error", fault);
+        }
+        try {
+            int price = hotel.getPrice(); //is changed to an int now
+            int refund = price/2;
+            success = refundCreditCard(GROUPNUMBER, creditCard, refund, ACCOUNT);
+            return success;
+        } catch(Exception ex){
+            CancelHotelFault fault = new CancelHotelFault();
+            fault.setMessage("Cancellation of hotel booking failed: " + ex);
+            throw new CancelHotelFaultMessage("Cancel failed ", fault);
+        }
     }
     
-        //The following methods are calling the bank webservice
+          //The following methods are calling the bank webservice
     private boolean chargeCreditCard(int group, CreditCardInfoType creditCardInfo, int amount, AccountType account) throws CreditCardFaultMessage {
         dk.dtu.imm.fastmoney.BankPortType port = service.getBankPort();
         return port.chargeCreditCard(group, creditCardInfo, amount, account);

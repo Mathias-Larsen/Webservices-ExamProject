@@ -64,7 +64,7 @@
     <xsd:complexType name="bookHotel">
         <xsd:sequence>
             <xsd:element name="bookingNumber" type="xsd:int"></xsd:element>
-            <xsd:element name="creditCardInfo" type="tns:creditCardInfoType"></xsd:element>
+            <xsd:element name="creditCardInfo" type="ns:creditCardInfoType"></xsd:element>
             <xsd:element name="creditCardGuaranteeRequired" type="xsd:boolean"></xsd:element>
         </xsd:sequence>
     </xsd:complexType>
@@ -81,7 +81,7 @@
     <xsd:complexType name="cancelHotel">
         <xsd:sequence>
             <xsd:element name="bookingNumber" type="xsd:int"></xsd:element>
-            <xsd:element name="creditCard" type="tns:creditCardInfoType"></xsd:element>
+            <xsd:element name="creditCard" type="ns:creditCardInfoType"></xsd:element>
         </xsd:sequence>
     </xsd:complexType>
     <xsd:complexType name="cancelHotelResponse">
