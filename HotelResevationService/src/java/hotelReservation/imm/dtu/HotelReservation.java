@@ -9,12 +9,17 @@ import dk.dtu.imm.fastmoney.CreditCardFaultMessage;
 import dk.dtu.imm.fastmoney.types.AccountType;
 import dk.dtu.imm.fastmoney.types.CreditCardInfoType;
 import dk.dtu.imm.hotelreservation.BookHotelFaultMessage;
+import dk.dtu.imm.hotelreservation.types.HotelBookingType;
 import dk.dtu.imm.hotelreservation.CancelHotelFaultMessage;
+import dk.dtu.imm.hotelreservation.types.AddressType;
 import dk.dtu.imm.hotelreservation.types.BookHotelFault;
 import dk.dtu.imm.hotelreservation.types.CancelHotelFault;
 import dk.dtu.imm.hotelreservation.types.HotelInfoType;
 import java.util.ArrayList;
 import javax.jws.WebService;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 
 /**
  *
@@ -35,6 +40,7 @@ public class HotelReservation {
         ACCOUNT = new AccountType();
         ACCOUNT.setName("NiceView");
         ACCOUNT.setNumber("50308815");
+        generateHotelInformation();
     }
 
     public java.util.List<dk.dtu.imm.hotelreservation.types.HotelInfoType> getHotels(java.lang.String city, javax.xml.datatype.XMLGregorianCalendar arrivalDate, javax.xml.datatype.XMLGregorianCalendar departureDate) {
@@ -129,4 +135,66 @@ public class HotelReservation {
         return port.validateCreditCard(group, creditCardInfo, amount);
     }
     
+    private void generateHotelInformation()
+    {
+        DatatypeFactory df;
+        try {
+            df = DatatypeFactory.newInstance();
+        } catch (DatatypeConfigurationException ex) {
+            return;
+        }
+        XMLGregorianCalendar date = df.newXMLGregorianCalendar("2013-12-25");
+        HotelInfoType hotelInfo = new HotelInfoType();
+        HotelBookingType hotelBooking = new HotelBookingType(); 
+        
+        // hotel 1
+        hotelInfo.setBookingNumber(12345);
+        hotelInfo.setNameOfHotelReservationService("Hotels.com");
+        hotelInfo.setPrice(3000);
+        
+        AddressType addr = new AddressType();
+        addr.setCity("Berlin");
+        addr.setStreet("Karl Marx Strasse");
+        addr.setCountry("Germany");
+        addr.setZip("1234");
+        hotelInfo.setAddress(addr);
+        hotelInfo.setHotelName("Das Baumeister");
+        hotelInfo.setCreditCardGuaranteeRequired(true);
+        
+        HOTELS.add(hotelInfo);
+        BOOKEDHOTELS.add(12345);
+        
+        // hotel 2
+        hotelInfo.setBookingNumber(54321);
+        hotelInfo.setNameOfHotelReservationService("Trivago");
+        hotelInfo.setPrice(200);
+        
+        addr.setCity("Moscow");
+        addr.setStreet("Staraya Square");
+        addr.setCountry("Russia");
+        addr.setZip("4321");
+        hotelInfo.setAddress(addr);
+        hotelInfo.setHotelName("Nostrovia!");
+        hotelInfo.setCreditCardGuaranteeRequired(false);
+        
+        HOTELS.add(hotelInfo);
+        
+        // hotel 3
+        hotelInfo.setBookingNumber(45321);
+        hotelInfo.setNameOfHotelReservationService("Trivago");
+        hotelInfo.setPrice(1000);
+        
+        addr.setCity("Moscow");
+        addr.setStreet("Staraya Square");
+        addr.setCountry("Russia");
+        addr.setZip("4321");
+        hotelInfo.setAddress(addr);
+        hotelInfo.setHotelName("VODKA!");
+        hotelInfo.setCreditCardGuaranteeRequired(true);
+        
+        HOTELS.add(hotelInfo);
+        
+        //hotel booking 1
+        
+    }
 }
