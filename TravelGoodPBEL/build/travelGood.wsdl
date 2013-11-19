@@ -10,14 +10,15 @@
             <xsd:complexType name="bookingType">
                 <xsd:sequence>
                     <xsd:element name="bookingNumber" type="xsd:int"></xsd:element>
+                    <xsd:element name="type" type="xsd:string"></xsd:element>
                     <xsd:element name="status" type="xsd:string"></xsd:element>
                 </xsd:sequence>
             </xsd:complexType>
             <xsd:complexType name="itineraryType">
                 <xsd:sequence>
-                    <xsd:element name="hotels" type="tns:bookingType" maxOccurs="unbounded" minOccurs="0"></xsd:element>
-                    <xsd:element name="flight" type="tns:bookingType" maxOccurs="unbounded" minOccurs="0"></xsd:element>
+                    <xsd:element name="bookings" type="tns:bookingType" maxOccurs="unbounded" minOccurs="0"></xsd:element>
                     <xsd:element name="itineraryStartDate" type="xsd:date"></xsd:element>
+                    <xsd:element name="status" type="xsd:string"></xsd:element>
                 </xsd:sequence>
             </xsd:complexType>
         </xsd:schema>
@@ -39,12 +40,14 @@
     <message name="getFlightsResponse">
         <part name="flights" type="ns:flightInfoArray"/>
     </message>
-    <message name="addFlightRequest">
+    <message name="addBookingRequest">
         <part name="bookingNumber" type="xsd:int"/>
+        <part name="type" type="xsd:string"/>
+        <part name="date" type="xsd:date"/>
         <part name="customerId" type="xsd:int"/>
         <part name="itineraryId" type="xsd:int"/>
     </message>
-    <message name="addFlightResponse">
+    <message name="addBookingResponse">
         <part name="status" type="xsd:boolean"/>
     </message>
     <message name="bookItineraryRequest">
@@ -70,14 +73,6 @@
     <message name="getItineraryResponse">
         <part name="itinerary" type="tns:itineraryType"/>
     </message>
-    <message name="addHotelRequest">
-        <part name="customerId" type="xsd:int"/>
-        <part name="itineraryId" type="xsd:int"/>
-        <part name="bookingNumber" type="xsd:int"/>
-    </message>
-    <message name="addHotelResponse">
-        <part name="status" type="xsd:boolean"/>
-    </message>
     <message name="cancelPlanningRequest">
         <part name="customerId" type="xsd:int"/>
         <part name="itineraryId" type="xsd:int"/>
@@ -94,9 +89,9 @@
             <input name="input2" message="tns:getFlightsRequest"/>
             <output name="output2" message="tns:getFlightsResponse"/>
         </operation>
-        <operation name="addFlight">
-            <input name="input3" message="tns:addFlightRequest"/>
-            <output name="output3" message="tns:addFlightResponse"/>
+        <operation name="addBooking">
+            <input name="input3" message="tns:addBookingRequest"/>
+            <output name="output3" message="tns:addBookingResponse"/>
         </operation>
         <operation name="bookItinerary">
             <input name="input4" message="tns:bookItineraryRequest"/>
@@ -109,10 +104,6 @@
         <operation name="getItinerary">
             <input name="input6" message="tns:getItineraryRequest"/>
             <output name="output6" message="tns:getItineraryResponse"/>
-        </operation>
-        <operation name="addHotel">
-            <input name="input7" message="tns:addHotelRequest"/>
-            <output name="output7" message="tns:addHotelResponse"/>
         </operation>
         <operation name="cancelPlanning">
             <input name="input8" message="tns:cancelPlanningRequest"/>
@@ -139,7 +130,7 @@
                 <soap:body use="literal" namespace="http://travelGood.ws"/>
             </output>
         </operation>
-        <operation name="addFlight">
+        <operation name="addBooking">
             <soap:operation/>
             <input name="input3">
                 <soap:body use="literal" namespace="http://travelGood.ws"/>
@@ -175,15 +166,6 @@
                 <soap:body use="literal" namespace="http://travelGood.ws"/>
             </output>
         </operation>
-        <operation name="addHotel">
-            <soap:operation/>
-            <input name="input7">
-                <soap:body use="literal" namespace="http://travelGood.ws"/>
-            </input>
-            <output name="output7">
-                <soap:body use="literal" namespace="http://travelGood.ws"/>
-            </output>
-        </operation>
         <operation name="cancelPlanning">
             <soap:operation/>
             <input name="input8">
@@ -211,16 +193,14 @@ A partner link type characterizes the conversational relationship between two se
     <vprop:propertyAlias propertyName="tns:itineraryId" messageType="tns:getFlightsRequest" part="itineraryId"/>
     <vprop:propertyAlias propertyName="tns:customerId" messageType="tns:itineraryRequest" part="customerId"/>
     <vprop:propertyAlias propertyName="tns:customerId" messageType="tns:getFlightsRequest" part="customerId"/>
-    <vprop:propertyAlias propertyName="tns:itineraryId" messageType="tns:addFlightRequest" part="itineraryId"/>
-    <vprop:propertyAlias propertyName="tns:customerId" messageType="tns:addFlightRequest" part="customerId"/>
+    <vprop:propertyAlias propertyName="tns:itineraryId" messageType="tns:addBookingRequest" part="itineraryId"/>
+    <vprop:propertyAlias propertyName="tns:customerId" messageType="tns:addBookingRequest" part="customerId"/>
     <vprop:propertyAlias propertyName="tns:itineraryId" messageType="tns:bookItineraryRequest" part="itineraryId"/>
     <vprop:propertyAlias propertyName="tns:customerId" messageType="tns:bookItineraryRequest" part="customerId"/>
     <vprop:propertyAlias propertyName="tns:itineraryId" messageType="tns:cancelItineraryRequest" part="itineraryId"/>
     <vprop:propertyAlias propertyName="tns:customerId" messageType="tns:cancelItineraryRequest" part="customerId"/>
     <vprop:propertyAlias propertyName="tns:itineraryId" messageType="tns:getItineraryRequest" part="itineraryId"/>
     <vprop:propertyAlias propertyName="tns:customerId" messageType="tns:getItineraryRequest" part="customerId"/>
-    <vprop:propertyAlias propertyName="tns:itineraryId" messageType="tns:addHotelRequest" part="itineraryId"/>
-    <vprop:propertyAlias propertyName="tns:customerId" messageType="tns:addHotelRequest" part="customerId"/>
     <vprop:propertyAlias propertyName="tns:itineraryId" messageType="tns:cancelPlanningRequest" part="itineraryId"/>
     <vprop:propertyAlias propertyName="tns:customerId" messageType="tns:cancelPlanningRequest" part="customerId"/>
 </definitions>

@@ -306,7 +306,7 @@ public class TravelGoodRESTTest {
     }
     
     /**
-    *Test P2 plans a trip by getting a list of hotels and flights, adds them to the itinerary,
+    *Test C2 plans a trip by getting a list of hotels and flights, adds them to the itinerary,
     * and books them. After booking the itinerary should be cancelled. 
     * Cancelling of the second item should fail, and the status should kepp being confirmed. 
     */  

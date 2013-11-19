@@ -72,14 +72,20 @@ public interface TravelGoodPortType {
      * @param customerId
      * @param itineraryId
      * @param bookingNumber
+     * @param date
+     * @param type
      * @return
      *     returns boolean
      */
     @WebMethod
     @WebResult(name = "status", partName = "status")
-    public boolean addFlight(
+    public boolean addBooking(
         @WebParam(name = "bookingNumber", partName = "bookingNumber")
         int bookingNumber,
+        @WebParam(name = "type", partName = "type")
+        String type,
+        @WebParam(name = "date", partName = "date")
+        XMLGregorianCalendar date,
         @WebParam(name = "customerId", partName = "customerId")
         int customerId,
         @WebParam(name = "itineraryId", partName = "itineraryId")
@@ -135,24 +141,6 @@ public interface TravelGoodPortType {
         int customerId,
         @WebParam(name = "itineraryId", partName = "itineraryId")
         int itineraryId);
-
-    /**
-     * 
-     * @param customerId
-     * @param itineraryId
-     * @param bookingNumber
-     * @return
-     *     returns boolean
-     */
-    @WebMethod
-    @WebResult(name = "status", partName = "status")
-    public boolean addHotel(
-        @WebParam(name = "customerId", partName = "customerId")
-        int customerId,
-        @WebParam(name = "itineraryId", partName = "itineraryId")
-        int itineraryId,
-        @WebParam(name = "bookingNumber", partName = "bookingNumber")
-        int bookingNumber);
 
     /**
      * 

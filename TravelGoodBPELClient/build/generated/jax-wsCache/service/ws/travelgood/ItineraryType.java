@@ -21,9 +21,9 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="hotels" type="{http://travelGood.ws}bookingType" maxOccurs="unbounded" minOccurs="0"/>
- *         &lt;element name="flight" type="{http://travelGood.ws}bookingType" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element name="bookings" type="{http://travelGood.ws}bookingType" maxOccurs="unbounded" minOccurs="0"/>
  *         &lt;element name="itineraryStartDate" type="{http://www.w3.org/2001/XMLSchema}date"/>
+ *         &lt;element name="status" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -34,31 +34,32 @@ import javax.xml.datatype.XMLGregorianCalendar;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "itineraryType", propOrder = {
-    "hotels",
-    "flight",
-    "itineraryStartDate"
+    "bookings",
+    "itineraryStartDate",
+    "status"
 })
 public class ItineraryType {
 
-    protected List<BookingType> hotels;
-    protected List<BookingType> flight;
+    protected List<BookingType> bookings;
     @XmlElement(required = true)
     @XmlSchemaType(name = "date")
     protected XMLGregorianCalendar itineraryStartDate;
+    @XmlElement(required = true)
+    protected String status;
 
     /**
-     * Gets the value of the hotels property.
+     * Gets the value of the bookings property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the hotels property.
+     * This is why there is not a <CODE>set</CODE> method for the bookings property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getHotels().add(newItem);
+     *    getBookings().add(newItem);
      * </pre>
      * 
      * 
@@ -68,40 +69,11 @@ public class ItineraryType {
      * 
      * 
      */
-    public List<BookingType> getHotels() {
-        if (hotels == null) {
-            hotels = new ArrayList<BookingType>();
+    public List<BookingType> getBookings() {
+        if (bookings == null) {
+            bookings = new ArrayList<BookingType>();
         }
-        return this.hotels;
-    }
-
-    /**
-     * Gets the value of the flight property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the flight property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getFlight().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link BookingType }
-     * 
-     * 
-     */
-    public List<BookingType> getFlight() {
-        if (flight == null) {
-            flight = new ArrayList<BookingType>();
-        }
-        return this.flight;
+        return this.bookings;
     }
 
     /**
@@ -126,6 +98,30 @@ public class ItineraryType {
      */
     public void setItineraryStartDate(XMLGregorianCalendar value) {
         this.itineraryStartDate = value;
+    }
+
+    /**
+     * Gets the value of the status property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getStatus() {
+        return status;
+    }
+
+    /**
+     * Sets the value of the status property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setStatus(String value) {
+        this.status = value;
     }
 
 }
