@@ -68,14 +68,14 @@ public class BPELTest {
         FlightInfoArray info = getFlights(start,end,date,cId,2);
         assertEquals(3,info.getFlightInformation().size());
         
-       boolean ok2 = addFlight(info.getFlightInformation().get(0).getBookingNumber(),info.getFlightInformation().get(0).getFlight().getDateStart(), cId, 2);
-       boolean ok3 = addFlight(info.getFlightInformation().get(0).getBookingNumber(),info.getFlightInformation().get(0).getFlight().getDateStart(), cId, 2);
+       boolean ok2 = addBooking(info.getFlightInformation().get(0).getBookingNumber(),"flight",info.getFlightInformation().get(0).getFlight().getDateStart(), cId, 2);
+       boolean ok3 = addBooking(info.getFlightInformation().get(0).getBookingNumber(),"flight",info.getFlightInformation().get(0).getFlight().getDateStart(), cId, 2);
        assertEquals(true,ok2);
        assertEquals(true,ok3);
        
        ItineraryType itinerary = getItinerary(cId, 2);
-       assertEquals(2,itinerary.getFlight().size());
-       for (ws.travelgood.BookingType fl : itinerary.getFlight())
+       assertEquals(2,itinerary.getBookings().size());
+       for (ws.travelgood.BookingType fl : itinerary.getBookings())
        {
            assertEquals("unconfirmed",fl.getStatus());
        }
@@ -83,14 +83,15 @@ public class BPELTest {
        //Book the itinerary
        boolean book =  bookItinerary(cId,creditcard,2);
        assertEquals(true,book);
+       
        //check that the bookings is confirmed by getting the itinerary again.
        itinerary = getItinerary(cId, 2);
-       for (ws.travelgood.BookingType fl : itinerary.getFlight())
+       for (ws.travelgood.BookingType fl : itinerary.getBookings())
        {
            assertEquals("confirmed",fl.getStatus());
        }
     }
-    /**
+     /**
     *Test P2 plans a trip by getting a list of flights and adds one of them to the itinerary,
     * After adding the flight, the itinerary planning should be cancelled, and the itinerary removed. 
     * There should not be any fails in the proces. 
@@ -106,12 +107,12 @@ public class BPELTest {
         FlightInfoArray info = getFlights(start,end,date,cId,2);
         assertEquals(3,info.getFlightInformation().size());
         
-       ok = addFlight(info.getFlightInformation().get(0).getBookingNumber(),info.getFlightInformation().get(0).getFlight().getDateStart(), cId, 2);
-       assertEquals(true,ok);
-       
-       ItineraryType itinerary = getItinerary(cId, 2);
-       assertEquals(1,itinerary.getFlight().size());
-       for (ws.travelgood.BookingType fl : itinerary.getFlight())
+        ok = addBooking(info.getFlightInformation().get(0).getBookingNumber(),"flight",info.getFlightInformation().get(0).getFlight().getDateStart(), cId, 2);
+        assertEquals(true,ok);
+        
+        ItineraryType itinerary = getItinerary(cId, 2);
+       assertEquals(1,itinerary.getBookings().size());
+       for (ws.travelgood.BookingType fl : itinerary.getBookings())
        {
            assertEquals("unconfirmed",fl.getStatus());
        }
@@ -121,9 +122,9 @@ public class BPELTest {
        
        //Checking by create the itineary again
        ok =  createItinerary(cId, 2);
-       assertEquals(true,ok);
+       assertEquals(true,ok);   
     }
-    
+       
     /**
     *Test B plans a trip by getting a list of hotels and flights, adds them to the itinerary,
     * and books them.
@@ -140,36 +141,33 @@ public class BPELTest {
         FlightInfoArray info = getFlights(start,end,date,cId,2);
         assertEquals(3,info.getFlightInformation().size());
         
-       boolean ok2 = addFlight(info.getFlightInformation().get(0).getBookingNumber(),info.getFlightInformation().get(0).getFlight().getDateStart(), cId, 2);
-       boolean ok3 = addFlight(info.getFlightInformation().get(1).getBookingNumber(),info.getFlightInformation().get(0).getFlight().getDateStart(), cId, 2);
-       boolean ok4 = addFlight(1,info.getFlightInformation().get(0).getFlight().getDateStart(), cId, 2);
-       boolean ok5 = addFlight(info.getFlightInformation().get(2).getBookingNumber(),info.getFlightInformation().get(0).getFlight().getDateStart(), cId, 2);
+       boolean ok2 = addBooking(info.getFlightInformation().get(0).getBookingNumber(),"flight",info.getFlightInformation().get(0).getFlight().getDateStart(), cId, 2);
+       boolean ok3 = addBooking(info.getFlightInformation().get(0).getBookingNumber(),"flight",info.getFlightInformation().get(0).getFlight().getDateStart(), cId, 2);
+       boolean ok4 = addBooking(1,"flight",info.getFlightInformation().get(0).getFlight().getDateStart(), cId, 2);
+       boolean ok5 = addBooking(info.getFlightInformation().get(0).getBookingNumber(),"flight",info.getFlightInformation().get(0).getFlight().getDateStart(), cId, 2);
        assertEquals(true,ok2);
        assertEquals(true,ok3);
        assertEquals(true,ok4);
        assertEquals(true,ok5);
        
        ItineraryType itinerary = getItinerary(cId, 2);
-       assertEquals(4,itinerary.getFlight().size());
-       for (ws.travelgood.BookingType fl : itinerary.getFlight())
+       assertEquals(4,itinerary.getBookings().size());
+       for (ws.travelgood.BookingType fl : itinerary.getBookings())
        {
            assertEquals("unconfirmed",fl.getStatus());
        }
-       
-       //Book the itinerary
+              //Book the itinerary
        boolean book =  bookItinerary(cId,creditcard,2);
        assertEquals(false,book);
        
        //check that the bookings is unconfirmed by getting the itinerary again.
        itinerary = getItinerary(cId, 2);
-       assertEquals("cancelled",itinerary.getFlight().get(0).getStatus());
-       assertEquals("cancelled",itinerary.getFlight().get(1).getStatus());
-       assertEquals("unconfirmed",itinerary.getFlight().get(2).getStatus());
-       assertEquals("unconfirmed",itinerary.getFlight().get(3).getStatus());
-   
+       assertEquals("cancelled",itinerary.getBookings().get(0).getStatus());
+       assertEquals("cancelled",itinerary.getBookings().get(1).getStatus());
+       assertEquals("unconfirmed",itinerary.getBookings().get(2).getStatus());
+       assertEquals("unconfirmed",itinerary.getBookings().get(3).getStatus());  
     }
-    
-    /**
+      /**
     *Test C1 plans a trip by getting a list of hotels and flights, adds them to the itinerary,
     * and books them. After booking the itinerary should be cancelled. 
     * There should not be any fails in the proces. 
@@ -184,14 +182,14 @@ public class BPELTest {
         FlightInfoArray info = getFlights(start,end,date,cId,2);
         assertEquals(3,info.getFlightInformation().size());
         
-       boolean ok2 = addFlight(info.getFlightInformation().get(0).getBookingNumber(),info.getFlightInformation().get(0).getFlight().getDateStart(), cId, 2);
-       boolean ok3 = addFlight(info.getFlightInformation().get(0).getBookingNumber(),info.getFlightInformation().get(0).getFlight().getDateStart(), cId, 2);
+       boolean ok2 = addBooking(info.getFlightInformation().get(0).getBookingNumber(),"flight",info.getFlightInformation().get(0).getFlight().getDateStart(), cId, 2);
+       boolean ok3 = addBooking(info.getFlightInformation().get(0).getBookingNumber(),"flight",info.getFlightInformation().get(0).getFlight().getDateStart(), cId, 2);
        assertEquals(true,ok2);
        assertEquals(true,ok3);
        
        ItineraryType itinerary = getItinerary(cId, 2);
-       assertEquals(2,itinerary.getFlight().size());
-       for (ws.travelgood.BookingType fl : itinerary.getFlight())
+       assertEquals(2,itinerary.getBookings().size());
+       for (ws.travelgood.BookingType fl : itinerary.getBookings())
        {
            assertEquals("unconfirmed",fl.getStatus());
        }
@@ -199,9 +197,10 @@ public class BPELTest {
        //Book the itinerary
        boolean book =  bookItinerary(cId,creditcard,2);
        assertEquals(true,book);
+       
        //check that the bookings is confirmed by getting the itinerary again.
        itinerary = getItinerary(cId, 2);
-       for (ws.travelgood.BookingType fl : itinerary.getFlight())
+       for (ws.travelgood.BookingType fl : itinerary.getBookings())
        {
            assertEquals("confirmed",fl.getStatus());
        }
@@ -210,12 +209,12 @@ public class BPELTest {
        assertEquals(true,ok);
        
        itinerary = getItinerary(cId, 2);
-       for (ws.travelgood.BookingType b : itinerary.getFlight())
+       for (ws.travelgood.BookingType b : itinerary.getBookings())
        {
            assertEquals("cancelled",b.getStatus());
        }
-       
     }
+        
     /**
     *Test C2 plans a trip by getting a list of hotels and flights, adds them to the itinerary,
     * and books them. After booking the itinerary should be cancelled. 
@@ -232,16 +231,16 @@ public class BPELTest {
         FlightInfoArray info = getFlights(start,end,date,cId,2);
         assertEquals(3,info.getFlightInformation().size());
         
-       boolean ok2 = addFlight(info.getFlightInformation().get(0).getBookingNumber(),info.getFlightInformation().get(0).getFlight().getDateStart(), cId, 2);
-       boolean ok3 = addFlight(info.getFlightInformation().get(2).getBookingNumber(),info.getFlightInformation().get(0).getFlight().getDateStart(), cId, 2);
-       boolean ok4 = addFlight(info.getFlightInformation().get(1).getBookingNumber(),info.getFlightInformation().get(0).getFlight().getDateStart(), cId, 2);
+       boolean ok2 = addBooking(info.getFlightInformation().get(0).getBookingNumber(),"flight",info.getFlightInformation().get(0).getFlight().getDateStart(), cId, 2);
+       boolean ok3 = addBooking(info.getFlightInformation().get(2).getBookingNumber(),"flight",info.getFlightInformation().get(0).getFlight().getDateStart(), cId, 2);
+       boolean ok4 = addBooking(info.getFlightInformation().get(1).getBookingNumber(),"flight",info.getFlightInformation().get(0).getFlight().getDateStart(), cId, 2);
        assertEquals(true,ok2);
        assertEquals(true,ok3);
        assertEquals(true,ok4);
        
        ItineraryType itinerary = getItinerary(cId, 2);
-       assertEquals(3,itinerary.getFlight().size());
-       for (ws.travelgood.BookingType fl : itinerary.getFlight())
+       assertEquals(3,itinerary.getBookings().size());
+       for (ws.travelgood.BookingType fl : itinerary.getBookings())
        {
            assertEquals("unconfirmed",fl.getStatus());
        }
@@ -249,9 +248,10 @@ public class BPELTest {
        //Book the itinerary
        boolean book =  bookItinerary(cId,creditcard,2);
        assertEquals(true,book);
+       
        //check that the bookings is confirmed by getting the itinerary again.
        itinerary = getItinerary(cId, 2);
-       for (ws.travelgood.BookingType fl : itinerary.getFlight())
+       for (ws.travelgood.BookingType fl : itinerary.getBookings())
        {
            assertEquals("confirmed",fl.getStatus());
        }
@@ -260,45 +260,53 @@ public class BPELTest {
        assertEquals(false,ok);
        
        itinerary = getItinerary(cId, 2);
-       assertEquals("cancelled",itinerary.getFlight().get(0).getStatus());
-       assertEquals("confirmed",itinerary.getFlight().get(1).getStatus());
-       assertEquals("cancelled",itinerary.getFlight().get(2).getStatus());
+       assertEquals("cancelled",itinerary.getBookings().get(0).getStatus());
+       assertEquals("confirmed",itinerary.getBookings().get(1).getStatus());
+       assertEquals("cancelled",itinerary.getBookings().get(2).getStatus());
+   
     }
-    private static boolean createItinerary(int customerId, int bookingNumber) {
+    private static boolean addBooking(int bookingNumber, java.lang.String type, javax.xml.datatype.XMLGregorianCalendar date, int customerId, int itineraryId) {
         ws.travelgood.TravelGoodService service = new ws.travelgood.TravelGoodService();
         ws.travelgood.TravelGoodPortType port = service.getTravelGoodPortTypeBindingPort();
-        return port.createItinerary(customerId, bookingNumber);
+        return port.addBooking(bookingNumber, type, date, customerId, itineraryId);
     }
-    private static FlightInfoArray getFlights(java.lang.String start, java.lang.String end, javax.xml.datatype.XMLGregorianCalendar date, int customerId, int itineraryId) {
-        ws.travelgood.TravelGoodService service = new ws.travelgood.TravelGoodService();
-        ws.travelgood.TravelGoodPortType port = service.getTravelGoodPortTypeBindingPort();
-        return port.getFlights(start, end, date, customerId, itineraryId);
-    }
-    private static ItineraryType getItinerary(int customerId, int itineraryId) {
-        ws.travelgood.TravelGoodService service = new ws.travelgood.TravelGoodService();
-        ws.travelgood.TravelGoodPortType port = service.getTravelGoodPortTypeBindingPort();
-        return port.getItinerary(customerId, itineraryId);
-    }
-    private static boolean cancelItinerary(int customerId, int itineraryId, dk.dtu.imm.fastmoney.types.CreditCardInfoType creditcard) {
-        ws.travelgood.TravelGoodService service = new ws.travelgood.TravelGoodService();
-        ws.travelgood.TravelGoodPortType port = service.getTravelGoodPortTypeBindingPort();
-        return port.cancelItinerary(customerId, itineraryId, creditcard);
-    }
+
     private static boolean bookItinerary(int customerId, dk.dtu.imm.fastmoney.types.CreditCardInfoType creditcard, int itineraryId) {
         ws.travelgood.TravelGoodService service = new ws.travelgood.TravelGoodService();
         ws.travelgood.TravelGoodPortType port = service.getTravelGoodPortTypeBindingPort();
         return port.bookItinerary(customerId, creditcard, itineraryId);
     }
+
+    private static boolean cancelItinerary(int customerId, int itineraryId, dk.dtu.imm.fastmoney.types.CreditCardInfoType creditcard) {
+        ws.travelgood.TravelGoodService service = new ws.travelgood.TravelGoodService();
+        ws.travelgood.TravelGoodPortType port = service.getTravelGoodPortTypeBindingPort();
+        return port.cancelItinerary(customerId, itineraryId, creditcard);
+    }
+
     private static boolean cancelPlanning(int customerId, int itineraryId) {
         ws.travelgood.TravelGoodService service = new ws.travelgood.TravelGoodService();
         ws.travelgood.TravelGoodPortType port = service.getTravelGoodPortTypeBindingPort();
         return port.cancelPlanning(customerId, itineraryId);
     }
-    private static boolean addFlight(int bookingNumber, javax.xml.datatype.XMLGregorianCalendar date, int customerId, int itineraryId) {
+
+    private static boolean createItinerary(int customerId, int itineraryId) {
         ws.travelgood.TravelGoodService service = new ws.travelgood.TravelGoodService();
         ws.travelgood.TravelGoodPortType port = service.getTravelGoodPortTypeBindingPort();
-        return port.addFlight(bookingNumber, date, customerId, itineraryId);
+        return port.createItinerary(customerId, itineraryId);
     }
+
+    private static FlightInfoArray getFlights(java.lang.String start, java.lang.String end, javax.xml.datatype.XMLGregorianCalendar date, int customerId, int itineraryId) {
+        ws.travelgood.TravelGoodService service = new ws.travelgood.TravelGoodService();
+        ws.travelgood.TravelGoodPortType port = service.getTravelGoodPortTypeBindingPort();
+        return port.getFlights(start, end, date, customerId, itineraryId);
+    }
+
+    private static ItineraryType getItinerary(int customerId, int itineraryId) {
+        ws.travelgood.TravelGoodService service = new ws.travelgood.TravelGoodService();
+        ws.travelgood.TravelGoodPortType port = service.getTravelGoodPortTypeBindingPort();
+        return port.getItinerary(customerId, itineraryId);
+    }
+
 
 
 }

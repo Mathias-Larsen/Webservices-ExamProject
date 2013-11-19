@@ -17,33 +17,28 @@
         <partnerLink name="PartnerLink1" xmlns:tns="http://travelGood.ws" partnerLinkType="tns:travelGood" myRole="travelGoodPortTypeRole"/>
     </partnerLinks>
     <variables>
-        <variable name="StatusService" type="xs:string"/>
-          <variable name="hotelNum" type="xs:int"/>
-          <variable name="flightNum" type="xs:int"/>
+        <variable name="AddBookingOut" messageType="ns1:addBookingResponse"/>
+        <variable name="AddBookingIn" messageType="ns1:addBookingRequest"/>
+        
+          <variable name="numberOfBookedBookings" type="xs:int"/>
           <variable name="CancelItineraryOut" messageType="ns1:cancelItineraryResponse"/>
         <variable name="CancelItineraryIn" messageType="ns1:cancelItineraryRequest"/>
-        <variable name="AddHotelOut" messageType="ns1:addHotelResponse"/>
-        <variable name="AddHotelIn" messageType="ns1:addHotelRequest"/>
         <variable name="CancelPlanningOut" messageType="ns1:cancelPlanningResponse"/>
         <variable name="CancelPlanningIn" messageType="ns1:cancelPlanningRequest"/>
         <variable name="BookItineraryOut" messageType="ns1:bookItineraryResponse"/>
         <variable name="BookItineraryIn" messageType="ns1:bookItineraryRequest"/>
         <variable name="GetItineraryOut" messageType="ns1:getItineraryResponse"/>
         <variable name="GetItineraryIn" messageType="ns1:getItineraryRequest"/>
-        <variable name="AddFlightOut" messageType="ns1:addFlightResponse"/>
-        <variable name="AddFlightIn" messageType="ns1:addFlightRequest"/>
-        <variable name="hotelSize" type="xs:int"/>
-        <variable name="flightSize" type="xs:int"/>
+        <variable name="bookingSize" type="xs:int"/>
         <variable name="itinerary" type="ns1:itineraryType">
             <sxed:editor>
-                <sxed:predicate path="$itinerary/hotels[$hotelSize]" source="to"/>
-                <sxed:predicate path="$itinerary/flight[$flightSize]" source="to"/>
-                <sxed:predicate path="$itinerary/flight[$ForEach1Counter]" source="from"/>
-                <sxed:predicate path="$itinerary/flight[$ForEach1Counter]" source="to"/>
-                  <sxed:predicate path="$itinerary/flight[$cancelFlightVariable]" source="from"/>
-                  <sxed:predicate path="$itinerary/flight[$cancelFlightVariable]" source="to"/>
-                <sxed:predicate path="$itinerary/flight[$ForEachFlightCancel]" source="from"/>
-                <sxed:predicate path="$itinerary/flight[$ForEachFlightCancel]" source="to"/>
+                <sxed:predicate path="$itinerary/bookings[$bookingSize]" source="to"/>
+                 <sxed:predicate path="$itinerary/bookings[$ForEach1Counter]" source="to"/>
+                 <sxed:predicate path="$itinerary/bookings[$cancelFlightVariable]" source="from"/>
+                 <sxed:predicate path="$itinerary/bookings[$cancelFlightVariable]" source="to"/>
+                 <sxed:predicate path="$itinerary/bookings[$ForEachFlightCancel]" source="from"/>
+                 <sxed:predicate path="$itinerary/bookings[$ForEach1Counter]" source="from"/>
+                 <sxed:predicate path="$itinerary/bookings[$ForEachFlightCancel]" source="to"/>
             </sxed:editor>
         </variable>
         <variable name="GetFlightsOutWS" xmlns:tns="urn://airlineReservation.imm.dtu.dk" messageType="tns:getFlightsResponse"/>
@@ -64,14 +59,6 @@
         </receive>
         <assign name="createItinearyAssign">
             <copy>
-                <from>1</from>
-                <to variable="flightSize"/>
-            </copy>
-            <copy>
-                <from>1</from>
-                <to variable="hotelSize"/>
-            </copy>
-            <copy>
                 <from>true()</from>
                 <to variable="CreateItineraryOut" part="status"/>
             </copy>
@@ -81,20 +68,24 @@
             </copy>
             <copy>
                 <from>'planning'</from>
-                <to variable="StatusService"/>
+                <to>$itinerary/status</to>
+            </copy>
+            <copy>
+                <from>1</from>
+                <to variable="bookingSize"/>
             </copy>
         </assign>
         <reply name="replyCreateItinerary" partnerLink="PartnerLink1" operation="createItinerary" xmlns:tns="http://travelGood.ws" portType="tns:travelGoodPortType" variable="CreateItineraryOut"/>
-        <repeatUntil name="RepeatTravelGoodProcess" xmlns:tns="urn://airlineReservation.imm.dtu.dk">
-              <sequence name="Sequence2">
-                  <pick name="ChooseMethod">
+        <repeatUntil name="RepeatTravelGoodProcessUntilDone" xmlns:tns="urn://airlineReservation.imm.dtu.dk">
+              <sequence name="TravelGoodServices">
+                   <pick name="ChooseMethod">
                       <onMessage partnerLink="PartnerLink1" operation="getFlights" portType="ns1:travelGoodPortType" variable="GetFlightsIn">
                               <correlations>
                                       <correlation set="ItineraryAndCustomer" initiate="no"/>
                                   </correlations>
                                   <sequence name="getFlights">
                                       <if name="If2">
-                                          <condition>$StatusService = 'planning'</condition>
+                                          <condition>$itinerary/status = 'planning'</condition>
                                           <sequence name="Sequence3">
                                               <assign name="AssignGetfFlights">
                                                   <copy>
@@ -119,7 +110,7 @@
                                               </assign>
                                           </sequence>
                                           <else>
-                                              <assign name="Assign1">
+                                              <assign name="setFalseGetFlights">
                                                   <copy>
                                                       <from>'null'</from>
                                                       <to variable="GetFlightsOut" part="flights"/>
@@ -130,117 +121,137 @@
                                       <reply name="ReplyGetFlights" partnerLink="PartnerLink1" operation="getFlights" portType="ns1:travelGoodPortType" variable="GetFlightsOut"/>
                                   </sequence>
                           </onMessage>
-                          <onMessage partnerLink="PartnerLink1" operation="addFlight" portType="ns1:travelGoodPortType" variable="AddFlightIn">
+                          <onMessage partnerLink="PartnerLink1" operation="addBooking" portType="ns1:travelGoodPortType" variable="AddBookingIn">
                               <correlations>
-                                      <correlation set="ItineraryAndCustomer" initiate="no"/>
-                                  </correlations>
-                                  <sequence name="addFLight">
+                                  <correlation set="ItineraryAndCustomer" initiate="no"/>
+                              </correlations>
+                                  <sequence name="addBooking">
                                       <if name="If3">
-                                          <condition>$StatusService = 'planning'</condition>
-                                          <if name="If1">
-                                              <condition>'null' = $itinerary/itineraryStartDate</condition>
-                                                  <assign name="AssignAddItinerary">
-                                                      <copy>
-                                                              <from variable="AddFlightIn" part="bookingNumber"/>
-                                                                  <to>$itinerary/flight[$flightSize]/bookingNumber
+                                          <condition>$itinerary/status = 'planning'</condition>
+                                           <sequence name="Sequence9">
+                                                <if name="dateEqualsNull">
+                                                     <condition>'null' = $itinerary/itineraryStartDate</condition>
+                                                          <assign name="AssignAddItinerary">
+                                                               <copy>
+                                                                         <from variable="AddBookingIn" part="bookingNumber"/>
+                                                                              <to>$itinerary/bookings[$bookingSize]/bookingNumber
                                             <sxed:editor>
-                                                                              <sxed:predicate path="$itinerary/flight[$flightSize]" source="to"/>
-                                                                          </sxed:editor>
-                                                                  </to>
-                                                          </copy>
-                                                          <copy>
-                                                              <from>'unconfirmed'</from>
-                                                                  <to>$itinerary/flight[$flightSize]/status
+                                                                                             <sxed:predicate path="$itinerary/flight[$flightSize]" source="to"/>
+                                                                                        </sxed:editor>
+                                                                              </to>
+                                                                    </copy>
+                                                                    <copy>
+                                                                         <from>'unconfirmed'</from>
+                                                                              <to>$itinerary/bookings[$bookingSize]/status
                                         <sxed:editor>
-                                                                              <sxed:predicate path="$itinerary/flight[$flightSize]" source="to"/>
-                                                                          </sxed:editor>
-                                                                  </to>
-                                                          </copy>
-                                                          <copy>
-                                                              <from>true()</from>
-                                                                  <to variable="AddFlightOut" part="status"/>
-                                                          </copy>
-                                                          <copy>
-                                                              <from>$flightSize + 1</from>
-                                                                  <to variable="flightSize"/>
-                                                          </copy>
-                                                          <copy>
-                                                              <from variable="AddFlightIn" part="date"/>
-                                                                  <to>$itinerary/itineraryStartDate</to>
-                                                          </copy>
-                                                  </assign>
-                                                  <elseif>
-                                                      <condition>sxxf:date-less-than($AddFlightIn.date, $itinerary/itineraryStartDate)</condition>
-                                                          <assign name="AssignAddItinerary1">
-                                                              <copy>
-                                                                      <from variable="AddFlightIn" part="bookingNumber"/>
-                                                                          <to>$itinerary/flight[$flightSize]/bookingNumber
-                                            <sxed:editor>
-                                                                                      <sxed:predicate path="$itinerary/flight[$flightSize]" source="to"/>
-                                                                                  </sxed:editor>
-                                                                          </to>
-                                                                  </copy>
-                                                                  <copy>
-                                                                      <from>'unconfirmed'</from>
-                                                                          <to>$itinerary/flight[$flightSize]/status
-                                        <sxed:editor>
-                                                                                      <sxed:predicate path="$itinerary/flight[$flightSize]" source="to"/>
-                                                                                  </sxed:editor>
-                                                                          </to>
-                                                                  </copy>
-                                                                  <copy>
-                                                                      <from>true()</from>
-                                                                          <to variable="AddFlightOut" part="status"/>
-                                                                  </copy>
-                                                                  <copy>
-                                                                      <from>$flightSize + 1</from>
-                                                                          <to variable="flightSize"/>
-                                                                  </copy>
-                                                                  <copy>
-                                                                      <from variable="AddFlightIn" part="date"/>
-                                                                          <to>$itinerary/itineraryStartDate</to>
-                                                                  </copy>
+                                                                                             <sxed:predicate path="$itinerary/bookings[$bookingSize]" source="to"/>
+                                                                                        </sxed:editor>
+                                                                              </to>
+                                                                    </copy>
+                                                                    <copy>
+                                                                         <from>true()</from>
+                                                                              <to variable="AddBookingOut" part="status"/>
+                                                                    </copy>
+                                                                    <copy>
+                                                                         <from variable="AddBookingIn" part="date"/>
+                                                                              <to>$itinerary/itineraryStartDate</to>
+                                                                    </copy>
+                                                                    <copy>
+                                                                         <from variable="AddBookingIn" part="type"/>
+                                                                              <to>$itinerary/bookings[$bookingSize]/type
+                                                                 <sxed:editor>
+                                                                                             <sxed:predicate path="$itinerary/bookings[$bookingSize]" source="to"/>
+                                                                                        </sxed:editor>
+                                                                              </to>
+                                                                    </copy>
                                                           </assign>
-                                                  </elseif>
-                                                  <else>
-                                                      <assign name="AssignAddItinerary2">
-                                                              <copy>
-                                                                      <from variable="AddFlightIn" part="bookingNumber"/>
-                                                                          <to>$itinerary/flight[$flightSize]/bookingNumber
+                                                          <elseif>
+                                                               <condition>sxxf:date-less-than($AddBookingIn.date, $itinerary/itineraryStartDate)</condition>
+                                                                    <assign name="AssignAddItinerary2">
+                                                                         <copy>
+                                                                                   <from variable="AddBookingIn" part="bookingNumber"/>
+                                                                                        <to>$itinerary/bookings[$bookingSize]/bookingNumber
                                             <sxed:editor>
-                                                                                      <sxed:predicate path="$itinerary/flight[$flightSize]" source="to"/>
-                                                                                  </sxed:editor>
-                                                                          </to>
-                                                                  </copy>
-                                                                  <copy>
-                                                                      <from>'unconfirmed'</from>
-                                                                          <to>$itinerary/flight[$flightSize]/status
+                                                                                                       <sxed:predicate path="$itinerary/flight[$flightSize]" source="to"/>
+                                                                                                  </sxed:editor>
+                                                                                        </to>
+                                                                              </copy>
+                                                                              <copy>
+                                                                                   <from>'unconfirmed'</from>
+                                                                                        <to>$itinerary/bookings[$bookingSize]/status
                                         <sxed:editor>
-                                                                                      <sxed:predicate path="$itinerary/flight[$flightSize]" source="to"/>
-                                                                                  </sxed:editor>
-                                                                          </to>
-                                                                  </copy>
-                                                                  <copy>
-                                                                      <from>true()</from>
-                                                                          <to variable="AddFlightOut" part="status"/>
-                                                                  </copy>
-                                                                  <copy>
-                                                                      <from>$flightSize + 1</from>
-                                                                          <to variable="flightSize"/>
-                                                                  </copy>
-                                                          </assign>
-                                                  </else>
-                                          </if>
-                                          <else>
-                                              <assign name="Assign2">
-                                                  <copy>
-                                                      <from>false()</from>
-                                                      <to variable="AddFlightOut" part="status"/>
-                                                  </copy>
-                                              </assign>
-                                          </else>
+                                                                                                       <sxed:predicate path="$itinerary/bookings[$bookingSize]" source="to"/>
+                                                                                                  </sxed:editor>
+                                                                                        </to>
+                                                                              </copy>
+                                                                              <copy>
+                                                                                   <from>true()</from>
+                                                                                        <to variable="AddBookingOut" part="status"/>
+                                                                              </copy>
+                                                                              <copy>
+                                                                                   <from variable="AddBookingIn" part="date"/>
+                                                                                        <to>$itinerary/itineraryStartDate</to>
+                                                                              </copy>
+                                                                              <copy>
+                                                                                   <from variable="AddBookingIn" part="type"/>
+                                                                                        <to>$itinerary/bookings[$bookingSize]/type
+                                                                                     <sxed:editor>
+                                                                                                       <sxed:predicate path="$itinerary/bookings[$bookingSize]" source="to"/>
+                                                                                                  </sxed:editor>
+                                                                                        </to>
+                                                                              </copy>
+                                                                    </assign>
+                                                          </elseif>
+                                                          <else>
+                                                               <assign name="AssignAddItinerary3">
+                                                                         <copy>
+                                                                                   <from variable="AddBookingIn" part="bookingNumber"/>
+                                                                                        <to>$itinerary/bookings[$bookingSize]/bookingNumber
+                                            <sxed:editor>
+                                                                                                       <sxed:predicate path="$itinerary/flight[$flightSize]" source="to"/>
+                                                                                                  </sxed:editor>
+                                                                                        </to>
+                                                                              </copy>
+                                                                              <copy>
+                                                                                   <from>'unconfirmed'</from>
+                                                                                        <to>$itinerary/bookings[$bookingSize]/status
+                                        <sxed:editor>
+                                                                                                       <sxed:predicate path="$itinerary/bookings[$bookingSize]" source="to"/>
+                                                                                                  </sxed:editor>
+                                                                                        </to>
+                                                                              </copy>
+                                                                              <copy>
+                                                                                   <from>true()</from>
+                                                                                        <to variable="AddBookingOut" part="status"/>
+                                                                              </copy>
+                                                                              <copy>
+                                                                                   <from variable="AddBookingIn" part="type"/>
+                                                                                        <to>$itinerary/bookings[$bookingSize]/type
+                                                                                  <sxed:editor>
+                                                                                                       <sxed:predicate path="$itinerary/bookings[$bookingSize]" source="to"/>
+                                                                                                  </sxed:editor>
+                                                                                        </to>
+                                                                              </copy>
+                                                                    </assign>
+                                                          </else>
+                                                </if>
+                                                <assign name="setBookingSizePlusOne">
+                                                     <copy>
+                                                          <from>$bookingSize + 1</from>
+                                                          <to variable="bookingSize"/>
+                                                     </copy>
+                                                </assign>
+                                           </sequence>
+                                           <else>
+                                                <assign name="setFalseBooking">
+                                                     <copy>
+                                                          <from>false()</from>
+                                                          <to variable="AddBookingOut" part="status"/>
+                                                     </copy>
+                                                </assign>
+                                           </else>
                                       </if>
-                                          <reply name="ReplyAddFlight" partnerLink="PartnerLink1" operation="addFlight" portType="ns1:travelGoodPortType" variable="AddFlightOut"/>
+                                          <reply name="ReplyAddFlight" partnerLink="PartnerLink1" operation="addBooking" portType="ns1:travelGoodPortType" variable="AddBookingOut"/>
                                   </sequence>
                           </onMessage>
                           <onMessage partnerLink="PartnerLink1" operation="getItinerary" portType="ns1:travelGoodPortType" variable="GetItineraryIn">
@@ -263,69 +274,70 @@
                                   </correlations>
                                   <sequence name="BookItinerary">
                                       <if name="IfPlanning">
-                                          <condition>'planning' = $StatusService</condition>
-                                          <sequence name="Sequence4">
-                                              <assign name="setNum">
-                                                  <copy>
-                                                      <from>1</from>
-                                                          <to variable="hotelNum"/>
-                                                  </copy>
-                                                      <copy>
-                                                      <from>1</from>
-                                                          <to variable="flightNum"/>
-                                                  </copy>
-                                              </assign>
+                                           <condition>'planning' = $itinerary/status</condition>
+                                           <sequence name="Sequence4">
                                               <scope name="ScopeBook">
                                                   <faultHandlers>
                                                       <catch faultName="tns:bookFlightFaultMessage">
                                                               <compensate name="Compensate1"/>
                                                           </catch>
                                                   </faultHandlers>
-                                                      <sequence name="SequenceBookFlight">
-                                                      <forEach name="ForEachFlight" parallel="no" counterName="ForEach1Counter">
+                                                      <sequence name="SequenceBook">
+                                                           <assign name="setBooked">
+                                                                <copy>
+                                                                          <from>true()</from>
+                                                                               <to variable="BookItineraryOut" part="status"/>
+                                                                     </copy>
+                                                                     <copy>
+                                                                          <from>'booked'</from>
+                                                                               <to>$itinerary/status</to>
+                                                                     </copy>
+                                                           </assign>
+                                                           <forEach name="ForEachBooking" parallel="no" counterName="ForEach1Counter">
                                                               <startCounterValue>1</startCounterValue>
-                                                                  <finalCounterValue>$flightSize - 1</finalCounterValue>
-                                                                  <scope name="BookFlightsScope">
+                                                           <finalCounterValue>$bookingSize - 1</finalCounterValue>
+                                                           <scope name="BookingScope">
                                                                       <variables>
                                                                               <variable name="BookFlightOut" messageType="tns:bookFlightResponse"/>
                                                                                   <variable name="BookFlightIn" messageType="tns:bookFlight"/>
                                                                           </variables>
                                                                           <compensationHandler>
-                                                                              <sequence name="SequenceCancelFlight">
-                                                                                      <forEach name="ForEachFlightCancel" parallel="no" counterName="cancelFlightVariable">
+                                                                              <sequence name="SequenceCancelBookings">
+                                                                                      <forEach name="ForEachBookingToCancel" parallel="no" counterName="cancelFlightVariable">
                                                                                               <startCounterValue>1</startCounterValue>
-                                                                                                  <finalCounterValue>$flightNum</finalCounterValue>
-                                                                                                  <scope name="ScopeCancelFlight">
+                                                                                           <finalCounterValue>$numberOfBookedBookings</finalCounterValue>
+                                                                                           <scope name="ScopeCancelBookedBookings">
                                                                                                       <variables>
                                                                                                               <variable name="CancelFlightOut" messageType="tns:cancelFlightResponse"/>
                                                                                                                   <variable name="CancelFlightIn" messageType="tns:cancelFlight"/>
                                                                                                           </variables>
                                                                                                           <sequence name="SequenceCancelF">
                                                                                                               <assign name="AssignCancelFlight">
-                                                                                                                      <copy>
-                                                                                                                              <from>$itinerary/flight[$cancelFlightVariable]/bookingNumber
-                                                                                                                          <sxed:editor>
-                                                                                                                                                                                      <sxed:predicate path="$itinerary/flight[$cancelFlightVariable]" source="from"/>
-                                                                                                                                                                                </sxed:editor>
-                                                                                                                                  </from>
-                                                                                                                                  <to>$CancelFlightIn.parametersCancelFlight/ns0:bookingNumber</to>
-                                                                                                                          </copy>
+                                                                               
                                                                                                                           <copy>
                                                                                                                               <from variable="BookItineraryIn" part="creditcard"/>
                                                                                                                                   <to>$CancelFlightIn.parametersCancelFlight/ns0:creditcard</to>
                                                                                                                           </copy>
-                                                                                                                          <copy>
-                                                                                                                              <from>'cancelled'</from>
-                                                                                                                                  <to>$itinerary/flight[$cancelFlightVariable]/status
-                                                                                                                    <sxed:editor>
-                                                                                                                                              <sxed:predicate path="$itinerary/flight[$cancelFlightVariable]" source="to"/>
-                                                                                                                                          </sxed:editor>
-                                                                                                                                  </to>
-                                                                                                                          </copy>
-                                                                                                                  <copy>
-                                                                                                                      <from>'planning'</from>
-                                                                                                                      <to variable="StatusService"/>
-                                                                                                                  </copy>
+                                                                                                                   <copy>
+                                                                                                                        <from>$itinerary/bookings[$cancelFlightVariable]/bookingNumber
+                                                                                                                             <sxed:editor>
+                                                                                                                                  <sxed:predicate path="$itinerary/bookings[$cancelFlightVariable]" source="from"/>
+                                                                                                                             </sxed:editor>
+                                                                                                                        </from>
+                                                                                                                        <to>$CancelFlightIn.parametersCancelFlight/ns0:bookingNumber</to>
+                                                                                                                   </copy>
+                                                                                                                   <copy>
+                                                                                                                        <from>'cancelled'</from>
+                                                                                                                        <to>$itinerary/bookings[$cancelFlightVariable]/status
+                                                                                                                             <sxed:editor>
+                                                                                                                                  <sxed:predicate path="$itinerary/bookings[$cancelFlightVariable]" source="to"/>
+                                                                                                                             </sxed:editor>
+                                                                                                                        </to>
+                                                                                                                   </copy>
+                                                                                                                   <copy>
+                                                                                                                        <from>'planning'</from>
+                                                                                                                        <to>$itinerary/status</to>
+                                                                                                                   </copy>
                                                                                                               </assign>
                                                                                                                   <invoke name="InvokeCancelFlight" partnerLink="PartnerLink2" operation="cancelFlight" portType="tns:AirlineReservationPortType" inputVariable="CancelFlightIn" outputVariable="CancelFlightOut"/>
                                                                                                           </sequence>
@@ -341,43 +353,33 @@
                                                                           </compensationHandler>
                                                                           <sequence name="BookFlights">
                                                                               <assign name="AssignFlight">
-                                                                                      <copy>
-                                                                                              <from variable="BookItineraryIn" part="creditcard"/>
-                                                                                                  <to>$BookFlightIn.parametersBookFlight/ns0:creditcard</to>
-                                                                                          </copy>
-                                                                                          <copy>
-                                                                                              <from>$itinerary/flight[$ForEach1Counter]/bookingNumber
-                                                <sxed:editor>
-                                                                                                              <sxed:predicate path="$itinerary/flight[$ForEach1Counter]" source="from"/>
-                                                                                                          </sxed:editor>
-                                                                                                  </from>
-                                                                                                  <to>$BookFlightIn.parametersBookFlight/ns0:bookingNumber</to>
-                                                                                          </copy>
-                                                                                  </assign>
+                                                                                   <copy>
+                                                                                        <from variable="BookItineraryIn" part="creditcard"/>
+                                                                                        <to>$BookFlightIn.parametersBookFlight/ns0:creditcard</to>
+                                                                                   </copy>
+                                                                                   <copy>
+                                                                                        <from>$itinerary/bookings[$ForEach1Counter]/bookingNumber
+                                                                                             <sxed:editor>
+                                                                                                  <sxed:predicate path="$itinerary/bookings[$ForEach1Counter]" source="from"/>
+                                                                                             </sxed:editor>
+                                                                                        </from>
+                                                                                        <to>$BookFlightIn.parametersBookFlight/ns0:bookingNumber</to>
+                                                                                   </copy>
+                                                                              </assign>
                                                                                   <invoke name="BookFlightInvoke" partnerLink="PartnerLink2" operation="bookFlight" portType="tns:AirlineReservationPortType" inputVariable="BookFlightIn" outputVariable="BookFlightOut"/>
                                                                                   <assign name="setFlightBooked">
-                                                                                      <copy>
-                                                                                              <from>'confirmed'</from>
-                                                                                                  <to>$itinerary/flight[$ForEach1Counter]/status
-                                                <sxed:editor>
-                                                                                                              <sxed:predicate path="$itinerary/flight[$ForEach1Counter]" source="to"/>
-                                                                                                          </sxed:editor>
-                                                                                                  </to>
-                                                                                          </copy>
-                                                                                          <copy>
-                                                                                              <from variable="ForEach1Counter"/>
-                                                                                                  <to variable="flightNum"/>
-                                                                                          </copy>
-                                                                                  </assign>
-                                                                                  <assign name="setBooked">
-                                                                                      <copy>
-                                                                                              <from>true()</from>
-                                                                                                  <to variable="BookItineraryOut" part="status"/>
-                                                                                          </copy>
-                                                                                      <copy>
-                                                                                          <from>'booked'</from>
-                                                                                          <to variable="StatusService"/>
-                                                                                      </copy>
+                                                                                       <copy>
+                                                                                            <from>'confirmed'</from>
+                                                                                            <to>$itinerary/bookings[$ForEach1Counter]/status
+                                                                                                 <sxed:editor>
+                                                                                                      <sxed:predicate path="$itinerary/bookings[$ForEach1Counter]" source="to"/>
+                                                                                                 </sxed:editor>
+                                                                                            </to>
+                                                                                       </copy>
+                                                                                       <copy>
+                                                                                            <from variable="ForEach1Counter"/>
+                                                                                            <to variable="numberOfBookedBookings"/>
+                                                                                       </copy>
                                                                                   </assign>
                                                                           </sequence>
                                                                   </scope>
@@ -403,19 +405,19 @@
                                   </correlations>
                                   <sequence name="CancelPlanningSequence">
                                       <if name="If5">
-                                          <condition>$StatusService = 'planning'</condition>
-                                          <assign name="AssignCancelPlanning">
+                                           <condition>$itinerary/status = 'planning'</condition>
+                                           <assign name="AssignCancelPlanning">
                                               <copy>
                                                       <from>true()</from>
                                                           <to variable="CancelPlanningOut" part="response"/>
                                                   </copy>
-                                                  <copy>
-                                                      <from>'PlanningCancelled'</from>
-                                                          <to variable="StatusService"/>
-                                                  </copy>
-                                          </assign>
+                                                <copy>
+                                                     <from>'PlanningCancelled'</from>
+                                                     <to>$itinerary/status</to>
+                                                </copy>
+                                           </assign>
                                           <else>
-                                              <assign name="Assign4">
+                                              <assign name="setNotAllowed">
                                                   <copy>
                                                       <from>false()</from>
                                                       <to variable="CancelPlanningOut" part="response"/>
@@ -426,58 +428,28 @@
                                           <reply name="CancelPlanningReply" partnerLink="PartnerLink1" operation="cancelPlanning" portType="ns1:travelGoodPortType" variable="CancelPlanningOut"/>
                                   </sequence>
                           </onMessage>
-                          <onMessage partnerLink="PartnerLink1" operation="addHotel" portType="ns1:travelGoodPortType" variable="AddHotelIn">
-                              <correlations>
-                                      <correlation set="ItineraryAndCustomer" initiate="no"/>
-                                  </correlations>
-                                  <sequence name="AddHotel">
-                                      <assign name="addingHotel">
-                                              <copy>
-                                                      <from>true()</from>
-                                                          <to variable="AddHotelOut" part="status"/>
-                                                  </copy>
-                                                  <copy>
-                                                      <from variable="AddHotelIn" part="bookingNumber"/>
-                                                          <to>$itinerary/hotels[$hotelSize]/bookingNumber
-                                    <sxed:editor>
-                                                                      <sxed:predicate path="$itinerary/hotels[$hotelSize]" source="to"/>
-                                                                  </sxed:editor>
-                                                          </to>
-                                                  </copy>
-                                                  <copy>
-                                                      <from>'unconfirmed'</from>
-                                                          <to>$itinerary/hotels[$hotelSize]/status
-                                    <sxed:editor>
-                                                                      <sxed:predicate path="$itinerary/hotels[$hotelSize]" source="to"/>
-                                                                  </sxed:editor>
-                                                          </to>
-                                                  </copy>
-                                                  <copy>
-                                                      <from>$hotelSize + 1</from>
-                                                          <to variable="hotelSize"/>
-                                                  </copy>
-                                          </assign>
-                                          <reply name="ReplyAddHotel" partnerLink="PartnerLink1" operation="addHotel" portType="ns1:travelGoodPortType" variable="AddHotelOut"/>
-                                  </sequence>
-                          </onMessage>
                       <onMessage partnerLink="PartnerLink1" operation="cancelItinerary" portType="ns1:travelGoodPortType" variable="CancelItineraryIn">
                           <correlations>
                               <correlation set="ItineraryAndCustomer" initiate="no"/>
                           </correlations>
                           <sequence name="Sequence5">
                               <if name="If6">
-                                  <condition>$StatusService = 'booked'</condition>
-                                  <sequence name="Sequence7">
-                                      <assign name="Assign8">
+                                   <condition>$itinerary/status = 'booked'</condition>
+                                   <sequence name="Sequence7">
+                                      <assign name="setItineraryCancelled">
                                           <copy>
                                               <from>true()</from>
                                               <to variable="CancelItineraryOut" part="status"/>
                                           </copy>
+                                           <copy>
+                                                <from>'cancelled'</from>
+                                                <to>$itinerary/status</to>
+                                           </copy>
                                       </assign>
                                       <forEach name="ForEachFlightCancel" parallel="no" counterName="ForEachFlightCancel">
                                           <startCounterValue>1</startCounterValue>
-                                          <finalCounterValue>$flightSize - 1</finalCounterValue>
-                                          <scope name="Scope1">
+                                           <finalCounterValue>$bookingSize - 1</finalCounterValue>
+                                           <scope name="ScopeCancelBookings">
                                                   <variables>
                                                           <variable name="CancelFlightOut" messageType="tns:cancelFlightResponse"/>
                                                               <variable name="CancelFlightIn" messageType="tns:cancelFlight"/>
@@ -486,40 +458,44 @@
                                                           <scope name="Scope2">
                                                               <faultHandlers>
                                                                   <catch faultName="tns:cancelFlightFaultMessage">
-                                                                      <assign name="Assign10">
+                                                                      <assign name="setFault">
                                                                           <copy>
                                                                               <from>false()</from>
                                                                               <to variable="CancelItineraryOut" part="status"/>
                                                                           </copy>
+                                                                           <copy>
+                                                                                <from>'planning'</from>
+                                                                                <to>$itinerary/status</to>
+                                                                           </copy>
                                                                       </assign>
                                                                   </catch>
                                                               </faultHandlers>
                                                               <sequence name="Sequence8">
-                                                                  <assign name="Assign7">
-                                                                      <copy>
-                                                                          <from>$itinerary/flight[$ForEachFlightCancel]/bookingNumber
-                                                                                      <sxed:editor>
-                                                                                          <sxed:predicate path="$itinerary/flight[$ForEachFlightCancel]" source="from"/>
-                                                                                      </sxed:editor>
-                                                                              </from>
-                                                                              <to>$CancelFlightIn.parametersCancelFlight/ns0:bookingNumber</to>
-                                                                      </copy>
-                                                                          <copy>
-                                                                          <from variable="CancelItineraryIn" part="creditcard"/>
-                                                                              <to>$CancelFlightIn.parametersCancelFlight/ns0:creditcard</to>
-                                                                      </copy>
-                                                                  </assign>
-                                                                  <invoke name="Invoke1" partnerLink="PartnerLink2" operation="cancelFlight" portType="tns:AirlineReservationPortType" inputVariable="CancelFlightIn" outputVariable="CancelFlightOut"/>
-                                                                  <assign name="Assign9">
-                                                                      <copy>
-                                                                              <from>'cancelled'</from>
-                                                                                  <to>$itinerary/flight[$ForEachFlightCancel]/status
-                                                                                          <sxed:editor>
-                                                                                              <sxed:predicate path="$itinerary/flight[$ForEachFlightCancel]" source="to"/>
-                                                                                          </sxed:editor>
-                                                                                  </to>
-                                                                          </copy>
-                                                                  </assign>
+                                                                   <assign name="Assign12">
+                                                                        <copy>
+                                                                             <from>$itinerary/bookings[$ForEachFlightCancel]/bookingNumber
+                                                                                  <sxed:editor>
+                                                                                       <sxed:predicate path="$itinerary/bookings[$ForEachFlightCancel]" source="from"/>
+                                                                                  </sxed:editor>
+                                                                             </from>
+                                                                             <to>$CancelFlightIn.parametersCancelFlight/ns0:bookingNumber</to>
+                                                                        </copy>
+                                                                        <copy>
+                                                                             <from variable="CancelItineraryIn" part="creditcard"/>
+                                                                             <to>$CancelFlightIn.parametersCancelFlight/ns0:creditcard</to>
+                                                                        </copy>
+                                                                   </assign>
+                                                                   <invoke name="InvokeCancelFlight" partnerLink="PartnerLink2" operation="cancelFlight" portType="tns:AirlineReservationPortType" inputVariable="CancelFlightIn" outputVariable="CancelFlightOut"/>
+                                                                   <assign name="setCancelled">
+                                                                        <copy>
+                                                                             <from>'cancelled'</from>
+                                                                             <to>$itinerary/bookings[$ForEachFlightCancel]/status
+                                                                                  <sxed:editor>
+                                                                                       <sxed:predicate path="$itinerary/bookings[$ForEachFlightCancel]" source="to"/>
+                                                                                  </sxed:editor>
+                                                                             </to>
+                                                                        </copy>
+                                                                   </assign>
                                                               </sequence>
                                                           </scope>
                                                       </sequence>
@@ -527,7 +503,7 @@
                                       </forEach>
                                   </sequence>
                                   <else>
-                                      <assign name="Assign6">
+                                      <assign name="setNotAllowed2">
                                           <copy>
                                               <from>false()</from>
                                               <to variable="CancelPlanningOut" part="response"/>
@@ -540,7 +516,7 @@
                       </onMessage>
                   </pick>
               </sequence>
-            <condition>$StatusService = 'PlanningCancelled'</condition>
+            <condition>$itinerary/status = 'PlanningCancelled'</condition>
         </repeatUntil>
     </sequence>
 </process>
