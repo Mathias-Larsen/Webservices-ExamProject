@@ -279,7 +279,7 @@
                                               <scope name="ScopeBook">
                                                   <faultHandlers>
                                                       <catch faultName="tns:bookFlightFaultMessage">
-                                                              <compensate name="Compensate1"/>
+                                                              <compensate name="CompensateBooking"/>
                                                           </catch>
                                                   </faultHandlers>
                                                       <sequence name="SequenceBook">

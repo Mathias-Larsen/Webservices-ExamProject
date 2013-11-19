@@ -47,6 +47,7 @@ public class HotelReservation {
         ArrayList<HotelInfoType> output = new ArrayList<HotelInfoType>();
         for(HotelInfoType hotelInfo : HOTELS)
         {
+            
             if(hotelInfo.getAddress().getCity().equals(city))
             {
                 output.add(hotelInfo);
@@ -77,6 +78,8 @@ public class HotelReservation {
         {
             try {
                 int price = choosenHotelInfo.getPrice();
+                validateCreditCard(GROUPNUMBER,creditCardInfo,price);
+                
                 success = chargeCreditCard(GROUPNUMBER, creditCardInfo, price, ACCOUNT);
                 BOOKEDHOTELS.add(choosenHotelInfo.getBookingNumber());
             } catch(CreditCardFaultMessage ex)
@@ -150,7 +153,7 @@ public class HotelReservation {
         // hotel 1
         hotelInfo.setBookingNumber(12345);
         hotelInfo.setNameOfHotelReservationService("Hotels.com");
-        hotelInfo.setPrice(3000);
+        hotelInfo.setPrice(300);
         
         AddressType addr = new AddressType();
         addr.setCity("Berlin");
@@ -164,7 +167,11 @@ public class HotelReservation {
         HOTELS.add(hotelInfo);
         BOOKEDHOTELS.add(12345);
         
-        // hotel 2
+        // hotel 2        
+        hotelInfo = new HotelInfoType();
+        hotelBooking = new HotelBookingType(); 
+        addr = new AddressType();
+        
         hotelInfo.setBookingNumber(54321);
         hotelInfo.setNameOfHotelReservationService("Trivago");
         hotelInfo.setPrice(200);
@@ -180,6 +187,10 @@ public class HotelReservation {
         HOTELS.add(hotelInfo);
         
         // hotel 3
+        hotelInfo = new HotelInfoType();
+        hotelBooking = new HotelBookingType(); 
+        addr = new AddressType();
+        
         hotelInfo.setBookingNumber(45321);
         hotelInfo.setNameOfHotelReservationService("Trivago");
         hotelInfo.setPrice(1000);
