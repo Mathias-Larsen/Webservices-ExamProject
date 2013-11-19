@@ -352,21 +352,30 @@
                                                                                   </sequence>
                                                                           </compensationHandler>
                                                                           <sequence name="BookFlights">
-                                                                              <assign name="AssignFlight">
-                                                                                   <copy>
-                                                                                        <from variable="BookItineraryIn" part="creditcard"/>
-                                                                                        <to>$BookFlightIn.parametersBookFlight/ns0:creditcard</to>
-                                                                                   </copy>
-                                                                                   <copy>
-                                                                                        <from>$itinerary/bookings[$ForEach1Counter]/bookingNumber
+                                                                              <if name="If8">
+                                                                                  <condition>'flight' = $itinerary/bookings[$ForEach1Counter]/type
+                                                                                      <sxed:editor>
+                                                                                          <sxed:predicate path="$itinerary/bookings[$ForEach1Counter]" source="from"/>
+                                                                                      </sxed:editor>
+                                                                                  </condition>
+                                                                                  <sequence name="Sequence11">
+                                                                                      <assign name="AssignFlight">
+                                                                                          <copy>
+                                                                                              <from variable="BookItineraryIn" part="creditcard"/>
+                                                                                                  <to>$BookFlightIn.parametersBookFlight/ns0:creditcard</to>
+                                                                                          </copy>
+                                                                                              <copy>
+                                                                                              <from>$itinerary/bookings[$ForEach1Counter]/bookingNumber
                                                                                              <sxed:editor>
-                                                                                                  <sxed:predicate path="$itinerary/bookings[$ForEach1Counter]" source="from"/>
-                                                                                             </sxed:editor>
-                                                                                        </from>
-                                                                                        <to>$BookFlightIn.parametersBookFlight/ns0:bookingNumber</to>
-                                                                                   </copy>
-                                                                              </assign>
-                                                                                  <invoke name="BookFlightInvoke" partnerLink="PartnerLink2" operation="bookFlight" portType="tns:AirlineReservationPortType" inputVariable="BookFlightIn" outputVariable="BookFlightOut"/>
+                                                                                                              <sxed:predicate path="$itinerary/bookings[$ForEach1Counter]" source="from"/>
+                                                                                                          </sxed:editor>
+                                                                                                  </from>
+                                                                                                  <to>$BookFlightIn.parametersBookFlight/ns0:bookingNumber</to>
+                                                                                          </copy>
+                                                                                      </assign>
+                                                                                      <invoke name="BookFlightInvoke" partnerLink="PartnerLink2" operation="bookFlight" portType="tns:AirlineReservationPortType" inputVariable="BookFlightIn" outputVariable="BookFlightOut"/>
+                                                                                  </sequence>
+                                                                              </if>
                                                                                   <assign name="setFlightBooked">
                                                                                        <copy>
                                                                                             <from>'confirmed'</from>
@@ -464,38 +473,47 @@
                                                                               <to variable="CancelItineraryOut" part="status"/>
                                                                           </copy>
                                                                            <copy>
-                                                                                <from>'planning'</from>
-                                                                                <to>$itinerary/status</to>
+                                                                               <from>'Failt in cancelling one or more bookings'</from>
+                                                                               <to>$itinerary/status</to>
                                                                            </copy>
                                                                       </assign>
                                                                   </catch>
                                                               </faultHandlers>
                                                               <sequence name="Sequence8">
-                                                                   <assign name="Assign12">
-                                                                        <copy>
-                                                                             <from>$itinerary/bookings[$ForEachFlightCancel]/bookingNumber
+                                                                  <if name="If7">
+                                                                      <condition>'flight' = $itinerary/bookings[$ForEachFlightCancel]/type
+                                                                          <sxed:editor>
+                                                                              <sxed:predicate path="$itinerary/bookings[$ForEachFlightCancel]" source="from"/>
+                                                                          </sxed:editor>
+                                                                      </condition>
+                                                                      <sequence name="Sequence10">
+                                                                          <assign name="Assign12">
+                                                                              <copy>
+                                                                                  <from>$itinerary/bookings[$ForEachFlightCancel]/bookingNumber
                                                                                   <sxed:editor>
-                                                                                       <sxed:predicate path="$itinerary/bookings[$ForEachFlightCancel]" source="from"/>
-                                                                                  </sxed:editor>
-                                                                             </from>
-                                                                             <to>$CancelFlightIn.parametersCancelFlight/ns0:bookingNumber</to>
-                                                                        </copy>
-                                                                        <copy>
-                                                                             <from variable="CancelItineraryIn" part="creditcard"/>
-                                                                             <to>$CancelFlightIn.parametersCancelFlight/ns0:creditcard</to>
-                                                                        </copy>
-                                                                   </assign>
-                                                                   <invoke name="InvokeCancelFlight" partnerLink="PartnerLink2" operation="cancelFlight" portType="tns:AirlineReservationPortType" inputVariable="CancelFlightIn" outputVariable="CancelFlightOut"/>
-                                                                   <assign name="setCancelled">
-                                                                        <copy>
-                                                                             <from>'cancelled'</from>
-                                                                             <to>$itinerary/bookings[$ForEachFlightCancel]/status
+                                                                                                  <sxed:predicate path="$itinerary/bookings[$ForEachFlightCancel]" source="from"/>
+                                                                                              </sxed:editor>
+                                                                                      </from>
+                                                                                      <to>$CancelFlightIn.parametersCancelFlight/ns0:bookingNumber</to>
+                                                                              </copy>
+                                                                                  <copy>
+                                                                                  <from variable="CancelItineraryIn" part="creditcard"/>
+                                                                                      <to>$CancelFlightIn.parametersCancelFlight/ns0:creditcard</to>
+                                                                              </copy>
+                                                                          </assign>
+                                                                          <invoke name="InvokeCancelFlight" partnerLink="PartnerLink2" operation="cancelFlight" portType="tns:AirlineReservationPortType" inputVariable="CancelFlightIn" outputVariable="CancelFlightOut"/>
+                                                                      </sequence>
+                                                                  </if>
+                                                                  <assign name="setCancelled">
+                                                                      <copy>
+                                                                              <from>'cancelled'</from>
+                                                                                  <to>$itinerary/bookings[$ForEachFlightCancel]/status
                                                                                   <sxed:editor>
-                                                                                       <sxed:predicate path="$itinerary/bookings[$ForEachFlightCancel]" source="to"/>
-                                                                                  </sxed:editor>
-                                                                             </to>
-                                                                        </copy>
-                                                                   </assign>
+                                                                                              <sxed:predicate path="$itinerary/bookings[$ForEachFlightCancel]" source="to"/>
+                                                                                          </sxed:editor>
+                                                                                  </to>
+                                                                          </copy>
+                                                                  </assign>
                                                               </sequence>
                                                           </scope>
                                                       </sequence>
@@ -514,7 +532,16 @@
                               <reply name="Reply1" partnerLink="PartnerLink1" operation="cancelItinerary" portType="ns1:travelGoodPortType" variable="CancelItineraryOut"/>
                           </sequence>
                       </onMessage>
-                  </pick>
+                       <onAlarm>
+                           <for>'P0Y0M0DT0H0M8.0S'</for>
+                           <assign name="setCancelled">
+                               <copy>
+                                   <from>'PlanningCancelled'</from>
+                                   <to>$itinerary/status</to>
+                               </copy>
+                           </assign>
+                       </onAlarm>
+                   </pick>
               </sequence>
             <condition>$itinerary/status = 'PlanningCancelled'</condition>
         </repeatUntil>

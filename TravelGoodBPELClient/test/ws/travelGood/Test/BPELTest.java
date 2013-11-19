@@ -74,6 +74,7 @@ public class BPELTest {
        assertEquals(true,ok3);
        
        ItineraryType itinerary = getItinerary(cId, 2);
+       assertEquals("planning",itinerary.getStatus());
        assertEquals(2,itinerary.getBookings().size());
        for (ws.travelgood.BookingType fl : itinerary.getBookings())
        {
@@ -86,6 +87,7 @@ public class BPELTest {
        
        //check that the bookings is confirmed by getting the itinerary again.
        itinerary = getItinerary(cId, 2);
+       assertEquals("booked",itinerary.getStatus());
        for (ws.travelgood.BookingType fl : itinerary.getBookings())
        {
            assertEquals("confirmed",fl.getStatus());
@@ -111,6 +113,7 @@ public class BPELTest {
         assertEquals(true,ok);
         
         ItineraryType itinerary = getItinerary(cId, 2);
+        assertEquals("planning",itinerary.getStatus());
        assertEquals(1,itinerary.getBookings().size());
        for (ws.travelgood.BookingType fl : itinerary.getBookings())
        {
@@ -151,6 +154,7 @@ public class BPELTest {
        assertEquals(true,ok5);
        
        ItineraryType itinerary = getItinerary(cId, 2);
+       assertEquals("planning",itinerary.getStatus());
        assertEquals(4,itinerary.getBookings().size());
        for (ws.travelgood.BookingType fl : itinerary.getBookings())
        {
@@ -158,6 +162,7 @@ public class BPELTest {
        }
               //Book the itinerary
        boolean book =  bookItinerary(cId,creditcard,2);
+       assertEquals("planning",itinerary.getStatus());
        assertEquals(false,book);
        
        //check that the bookings is unconfirmed by getting the itinerary again.
@@ -200,6 +205,7 @@ public class BPELTest {
        
        //check that the bookings is confirmed by getting the itinerary again.
        itinerary = getItinerary(cId, 2);
+       assertEquals("booked",itinerary.getStatus());
        for (ws.travelgood.BookingType fl : itinerary.getBookings())
        {
            assertEquals("confirmed",fl.getStatus());
@@ -209,6 +215,7 @@ public class BPELTest {
        assertEquals(true,ok);
        
        itinerary = getItinerary(cId, 2);
+       assertEquals("cancelled",itinerary.getStatus());
        for (ws.travelgood.BookingType b : itinerary.getBookings())
        {
            assertEquals("cancelled",b.getStatus());
@@ -239,6 +246,7 @@ public class BPELTest {
        assertEquals(true,ok4);
        
        ItineraryType itinerary = getItinerary(cId, 2);
+       assertEquals("planning",itinerary.getStatus());
        assertEquals(3,itinerary.getBookings().size());
        for (ws.travelgood.BookingType fl : itinerary.getBookings())
        {
@@ -251,6 +259,7 @@ public class BPELTest {
        
        //check that the bookings is confirmed by getting the itinerary again.
        itinerary = getItinerary(cId, 2);
+       assertEquals("booked",itinerary.getStatus());
        for (ws.travelgood.BookingType fl : itinerary.getBookings())
        {
            assertEquals("confirmed",fl.getStatus());
@@ -260,11 +269,14 @@ public class BPELTest {
        assertEquals(false,ok);
        
        itinerary = getItinerary(cId, 2);
+       assertEquals("Failt in cancelling one or more bookings",itinerary.getStatus());
+       
        assertEquals("cancelled",itinerary.getBookings().get(0).getStatus());
        assertEquals("confirmed",itinerary.getBookings().get(1).getStatus());
        assertEquals("cancelled",itinerary.getBookings().get(2).getStatus());
    
     }
+    
     private static boolean addBooking(int bookingNumber, java.lang.String type, javax.xml.datatype.XMLGregorianCalendar date, int customerId, int itineraryId) {
         ws.travelgood.TravelGoodService service = new ws.travelgood.TravelGoodService();
         ws.travelgood.TravelGoodPortType port = service.getTravelGoodPortTypeBindingPort();
