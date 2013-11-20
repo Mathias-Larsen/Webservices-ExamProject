@@ -76,6 +76,7 @@ public class BPELTest {
        ItineraryType itinerary = getItinerary(cId, 2);
        assertEquals("planning",itinerary.getStatus());
        assertEquals(2,itinerary.getBookings().size());
+       System.out.println(itinerary.getItineraryStartDate());
        for (ws.travelgood.BookingType fl : itinerary.getBookings())
        {
            assertEquals("unconfirmed",fl.getStatus());

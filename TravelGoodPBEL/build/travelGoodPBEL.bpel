@@ -19,7 +19,6 @@
     <variables>
         <variable name="AddBookingOut" messageType="ns1:addBookingResponse"/>
         <variable name="AddBookingIn" messageType="ns1:addBookingRequest"/>
-        
           <variable name="numberOfBookedBookings" type="xs:int"/>
           <variable name="CancelItineraryOut" messageType="ns1:cancelItineraryResponse"/>
         <variable name="CancelItineraryIn" messageType="ns1:cancelItineraryRequest"/>
@@ -63,16 +62,16 @@
                 <to variable="CreateItineraryOut" part="status"/>
             </copy>
             <copy>
-                <from>'null'</from>
-                <to>$itinerary/itineraryStartDate</to>
-            </copy>
-            <copy>
                 <from>'planning'</from>
                 <to>$itinerary/status</to>
             </copy>
             <copy>
                 <from>1</from>
                 <to variable="bookingSize"/>
+            </copy>
+            <copy>
+                <from>'2030-11-20T14:48:10.67+01:00'</from>
+                <to>$itinerary/itineraryStartDate</to>
             </copy>
         </assign>
         <reply name="replyCreateItinerary" partnerLink="PartnerLink1" operation="createItinerary" xmlns:tns="http://travelGood.ws" portType="tns:travelGoodPortType" variable="CreateItineraryOut"/>
@@ -129,9 +128,9 @@
                                       <if name="If3">
                                           <condition>$itinerary/status = 'planning'</condition>
                                            <sequence name="Sequence9">
-                                                <if name="dateEqualsNull">
-                                                     <condition>'null' = $itinerary/itineraryStartDate</condition>
-                                                          <assign name="AssignAddItinerary">
+                                                <if name="ifDateEalier">
+                                                    <condition>sxxf:date-less-than($AddBookingIn.date, $itinerary/itineraryStartDate)</condition>
+                                                    <assign name="AssignAddItinerary">
                                                                <copy>
                                                                          <from variable="AddBookingIn" part="bookingNumber"/>
                                                                               <to>$itinerary/bookings[$bookingSize]/bookingNumber
@@ -153,10 +152,6 @@
                                                                               <to variable="AddBookingOut" part="status"/>
                                                                     </copy>
                                                                     <copy>
-                                                                         <from variable="AddBookingIn" part="date"/>
-                                                                              <to>$itinerary/itineraryStartDate</to>
-                                                                    </copy>
-                                                                    <copy>
                                                                          <from variable="AddBookingIn" part="type"/>
                                                                               <to>$itinerary/bookings[$bookingSize]/type
                                                                  <sxed:editor>
@@ -164,44 +159,11 @@
                                                                                         </sxed:editor>
                                                                               </to>
                                                                     </copy>
-                                                          </assign>
-                                                          <elseif>
-                                                               <condition>sxxf:date-less-than($AddBookingIn.date, $itinerary/itineraryStartDate)</condition>
-                                                                    <assign name="AssignAddItinerary2">
-                                                                         <copy>
-                                                                                   <from variable="AddBookingIn" part="bookingNumber"/>
-                                                                                        <to>$itinerary/bookings[$bookingSize]/bookingNumber
-                                            <sxed:editor>
-                                                                                                       <sxed:predicate path="$itinerary/flight[$flightSize]" source="to"/>
-                                                                                                  </sxed:editor>
-                                                                                        </to>
-                                                                              </copy>
-                                                                              <copy>
-                                                                                   <from>'unconfirmed'</from>
-                                                                                        <to>$itinerary/bookings[$bookingSize]/status
-                                        <sxed:editor>
-                                                                                                       <sxed:predicate path="$itinerary/bookings[$bookingSize]" source="to"/>
-                                                                                                  </sxed:editor>
-                                                                                        </to>
-                                                                              </copy>
-                                                                              <copy>
-                                                                                   <from>true()</from>
-                                                                                        <to variable="AddBookingOut" part="status"/>
-                                                                              </copy>
-                                                                              <copy>
-                                                                                   <from variable="AddBookingIn" part="date"/>
-                                                                                        <to>$itinerary/itineraryStartDate</to>
-                                                                              </copy>
-                                                                              <copy>
-                                                                                   <from variable="AddBookingIn" part="type"/>
-                                                                                        <to>$itinerary/bookings[$bookingSize]/type
-                                                                                     <sxed:editor>
-                                                                                                       <sxed:predicate path="$itinerary/bookings[$bookingSize]" source="to"/>
-                                                                                                  </sxed:editor>
-                                                                                        </to>
-                                                                              </copy>
-                                                                    </assign>
-                                                          </elseif>
+                                                        <copy>
+                                                            <from variable="AddBookingIn" part="date"/>
+                                                            <to>$itinerary/itineraryStartDate</to>
+                                                        </copy>
+                                                    </assign>
                                                           <else>
                                                                <assign name="AssignAddItinerary3">
                                                                          <copy>
@@ -279,7 +241,7 @@
                                               <scope name="ScopeBook">
                                                   <faultHandlers>
                                                       <catch faultName="tns:bookFlightFaultMessage">
-                                                              <compensate name="Compensate1"/>
+                                                              <compensate name="CompensateBooking"/>
                                                           </catch>
                                                   </faultHandlers>
                                                       <sequence name="SequenceBook">
@@ -533,7 +495,7 @@
                           </sequence>
                       </onMessage>
                        <onAlarm>
-                           <for>'P0Y0M0DT0H0M8.0S'</for>
+                           <until>$itinerary/itineraryStartDate</until>
                            <assign name="setCancelled">
                                <copy>
                                    <from>'PlanningCancelled'</from>
