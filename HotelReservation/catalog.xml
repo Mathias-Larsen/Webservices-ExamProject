@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
+    <nextCatalog catalog="nbproject/private/retriever/catalog.xml"/>
+    <system systemId="http://fastmoney.imm.dtu.dk:8080/BankService?wsdl" uri="src/conf/xml-resources/web-service-references/BankService/wsdl/fastmoney.imm.dtu.dk_8080/BankService.wsdl"/>
+    <system systemId="file:/C:/Users/Jesper/Documents/GitHub/Webservices-ExamProject/HotelReservation/src/java/HotelReservation.wsdl" uri="src/conf/xml-resources/web-services/HotelReservation/wsdl/HotelReservation.wsdl"/>
+    <system systemId="file:/C:/Users/Jesper/Documents/GitHub/Webservices-ExamProject/HotelReservation/src/java/HotelReservationTypes.xsd" uri="src/conf/xml-resources/web-services/HotelReservation/wsdl/HotelReservationTypes.xsd"/>
+    <system systemId="http://fastmoney.imm.dtu.dk:8080/BankService?xsd=1" uri="src/conf/xml-resources/web-services/HotelReservation/wsdl/fastmoney.imm.dtu.dk_8080/BankService.xsd_1.xsd"/>
+</catalog>

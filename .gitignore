@@ -10,3 +10,7 @@
 /HotelResevationService/dist/
 /AirlineReservation/dist/
 /HotelReservationServiceClient/build/
+/HotelReservation/nbproject/private/
+/HotelReservation/build/
+/HotelReservationClient/nbproject/private/
+/HotelReservationClient/build/
