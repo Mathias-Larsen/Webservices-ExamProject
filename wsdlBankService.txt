@@ -1,0 +1,5 @@
+Beskrivelse: http://fastmoney.imm.dtu.dk:8080/
+WSDL: http://fastmoney.imm.dtu.dk:8080/BankService?wsdl
+XSD: http://fastmoney.imm.dtu.dk:8080/BankService?xsd=1
+WSDL secure: http://fastmoney.imm.dtu.dk:8080/BankSecureService?wsdl
+WSIL: fastmoney.imm.dtu.dk:8080/inspection.wsil --> Vis kilde kode

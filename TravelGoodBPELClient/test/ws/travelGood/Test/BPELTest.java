@@ -172,6 +172,7 @@ public class BPELTest {
        assertEquals("cancelled",itinerary.getBookings().get(1).getStatus());
        assertEquals("unconfirmed",itinerary.getBookings().get(2).getStatus());
        assertEquals("unconfirmed",itinerary.getBookings().get(3).getStatus());  
+       
     }
       /**
     *Test C1 plans a trip by getting a list of hotels and flights, adds them to the itinerary,
