@@ -10,6 +10,7 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.datatype.XMLGregorianCalendar;
 import dk.dtu.imm.airlinereservation.types.FlightInfoArray;
 import dk.dtu.imm.fastmoney.types.CreditCardInfoType;
+import dk.dtu.imm.hotelreservation.types.HotelInfoArray;
 
 
 /**
@@ -23,6 +24,7 @@ import dk.dtu.imm.fastmoney.types.CreditCardInfoType;
 @XmlSeeAlso({
     dk.dtu.imm.airlinereservation.types.ObjectFactory.class,
     dk.dtu.imm.fastmoney.types.ObjectFactory.class,
+    dk.dtu.imm.hotelreservation.types.ObjectFactory.class,
     ws.travelgood.ObjectFactory.class
 })
 public interface TravelGoodPortType {
@@ -137,6 +139,30 @@ public interface TravelGoodPortType {
     @WebMethod
     @WebResult(name = "itinerary", partName = "itinerary")
     public ItineraryType getItinerary(
+        @WebParam(name = "customerId", partName = "customerId")
+        int customerId,
+        @WebParam(name = "itineraryId", partName = "itineraryId")
+        int itineraryId);
+
+    /**
+     * 
+     * @param startDate
+     * @param customerId
+     * @param itineraryId
+     * @param endDate
+     * @param city
+     * @return
+     *     returns dk.dtu.imm.hotelreservation.types.HotelInfoArray
+     */
+    @WebMethod
+    @WebResult(name = "response", partName = "response")
+    public HotelInfoArray getHotels(
+        @WebParam(name = "city", partName = "city")
+        String city,
+        @WebParam(name = "startDate", partName = "startDate")
+        XMLGregorianCalendar startDate,
+        @WebParam(name = "endDate", partName = "endDate")
+        XMLGregorianCalendar endDate,
         @WebParam(name = "customerId", partName = "customerId")
         int customerId,
         @WebParam(name = "itineraryId", partName = "itineraryId")

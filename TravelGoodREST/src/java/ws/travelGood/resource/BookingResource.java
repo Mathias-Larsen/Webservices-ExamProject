@@ -6,6 +6,8 @@ package ws.travelGood.resource;
 
 import dk.dtu.imm.airlinereservation.BookFlightFaultMessage;
 import dk.dtu.imm.airlinereservation.CancelFlightFaultMessage;
+import dk.dtu.imm.hotelreservation.BookHotelFaultMessage;
+import dk.dtu.imm.hotelreservation.CancelHotelFaultMessage;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.Consumes;
@@ -98,9 +100,19 @@ public class BookingResource {
                         fail = true;
                     }
                 }
-                //add cancelHotel
+                if(b.getBookingType().equals("HOTEL"))
+                {    
+                    try {
+                        cancelHotel(b.getBookingNumber(),cc);
+                        b.setStatus(ItineraryResource.CANCELLED_BOOKING);
+                    } 
+                    catch (CancelHotelFaultMessage ex) {
+                        fail = true;
+                    }
+                }
             }
         }
+         
         BookingStatusRepresentation response = new BookingStatusRepresentation();
         ItineraryResource.addSelfLink(cid, iid, response);
         if(fail)
@@ -132,7 +144,13 @@ public class BookingResource {
                         bookFlight(b.getBookingNumber(),cc);
                         b.setStatus(ItineraryResource.CONFIRMED_BOOKING);
                         bookingsToCancel.add(b);   
-                    }//TODO add hotel booking. 
+                    }
+                    else if(b.getBookingType().equals("HOTEL"))
+                    {                
+                        bookHotel(b.getBookingNumber(),cc);
+                        b.setStatus(ItineraryResource.CONFIRMED_BOOKING);
+                        bookingsToCancel.add(b);   
+                    }
                 }
             }
          }catch (BookFlightFaultMessage ex) {
@@ -149,9 +167,48 @@ public class BookingResource {
                     } catch (CancelFlightFaultMessage ex1) {
                         Logger.getLogger(BookingResource.class.getName()).log(Level.SEVERE, null, ex1);
                     }
-                }//TODO add hotel booking. 
+                }
+                else if(b.getBookingType().equals("HOTEL"))
+                {
+                    try 
+                    {
+                        cancelHotel(b.getBookingNumber(),cc);
+                        b.setStatus(ItineraryResource.CANCELLED_BOOKING);
+                    } catch (CancelHotelFaultMessage ex1) {
+                        Logger.getLogger(BookingResource.class.getName()).log(Level.SEVERE, null, ex1);
+                    }
+                }                
             }
          }
+        catch(BookHotelFaultMessage ex2)
+        {
+            fail = true;
+            for(int j = 0; j<bookingsToCancel.size();j++)
+            {
+                Booking b = bookingsToCancel.get(j);
+                if(b.getBookingType().equals("FLIGHT"))
+                {
+                    try 
+                    {
+                        cancelFlight(b.getBookingNumber(),cc);
+                        b.setStatus(ItineraryResource.CANCELLED_BOOKING);
+                    } catch (CancelFlightFaultMessage ex1) {
+                        Logger.getLogger(BookingResource.class.getName()).log(Level.SEVERE, null, ex1);
+                    }
+                }
+                else if(b.getBookingType().equals("HOTEL"))
+                {
+                    try 
+                    {
+                        cancelHotel(b.getBookingNumber(),cc);
+                        b.setStatus(ItineraryResource.CANCELLED_BOOKING);
+                    } catch (CancelHotelFaultMessage ex1) {
+                        Logger.getLogger(BookingResource.class.getName()).log(Level.SEVERE, null, ex1);
+                    }
+                }                
+            }
+        }
+        
         BookingStatusRepresentation response = new BookingStatusRepresentation();
         ItineraryResource.addSelfLink(cid, iid, response);
         if(!fail)
@@ -165,7 +222,6 @@ public class BookingResource {
         }
         
         response.setBookingStatus(itinerary.getStatus());
-        
         return Response.ok(response).build();
     }
 
@@ -179,6 +235,18 @@ public class BookingResource {
         dk.dtu.imm.airlinereservation.AirlineReservationService service = new dk.dtu.imm.airlinereservation.AirlineReservationService();
         dk.dtu.imm.airlinereservation.AirlineReservationPortType port = service.getAirlineReservationPortTypeBindingPort();
         return port.cancelFlight(bookingNumber, creditcard);
+    }
+
+    private static boolean cancelHotel(int bookingNumber, dk.dtu.imm.fastmoney.types.CreditCardInfoType creditCard) throws CancelHotelFaultMessage {
+        dk.dtu.imm.hotelreservation.HotelReservationService service = new dk.dtu.imm.hotelreservation.HotelReservationService();
+        dk.dtu.imm.hotelreservation.HotelReservationPortType port = service.getHotelReservationPortTypeBindingPort();
+        return port.cancelHotel(bookingNumber, creditCard);
+    }
+
+    private static boolean bookHotel(int bookingNumber, dk.dtu.imm.fastmoney.types.CreditCardInfoType creditCardInfo) throws BookHotelFaultMessage {
+        dk.dtu.imm.hotelreservation.HotelReservationService service = new dk.dtu.imm.hotelreservation.HotelReservationService();
+        dk.dtu.imm.hotelreservation.HotelReservationPortType port = service.getHotelReservationPortTypeBindingPort();
+        return port.bookHotel(bookingNumber, creditCardInfo);
     }
 
 

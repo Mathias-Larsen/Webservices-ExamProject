@@ -3,6 +3,7 @@ package ws.travelGood.Test;
 import dk.dtu.imm.airlinereservation.types.FlightInfoArray;
 import dk.dtu.imm.fastmoney.types.CreditCardInfoType;
 import dk.dtu.imm.fastmoney.types.ExpirationDateType;
+import dk.dtu.imm.hotelreservation.types.HotelInfoArray;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -51,7 +52,6 @@ public class BPELTest {
     {
         return id++;
     }
-    
     /**
     *Test P1 plans a trip by getting a list of hotels and flights, adds them to the itinerary,
     * and books them.
@@ -67,15 +67,34 @@ public class BPELTest {
         //Get the flights
         FlightInfoArray info = getFlights(start,end,date,cId,2);
         assertEquals(3,info.getFlightInformation().size());
-        
-       boolean ok2 = addBooking(info.getFlightInformation().get(0).getBookingNumber(),"flight",info.getFlightInformation().get(0).getFlight().getDateStart(), cId, 2);
-       boolean ok3 = addBooking(info.getFlightInformation().get(0).getBookingNumber(),"flight",info.getFlightInformation().get(0).getFlight().getDateStart(), cId, 2);
-       assertEquals(true,ok2);
-       assertEquals(true,ok3);
+        //add flight
+       ok = addBooking(info.getFlightInformation().get(0).getBookingNumber(),"flight",info.getFlightInformation().get(0).getFlight().getDateStart(), cId, 2);
+       assertEquals(true,ok);
+       
+       //Get the hotels
+       HotelInfoArray  hotels = getHotels("Moscow",date,date,cId,2);
+       assertEquals(2,hotels.getHotelInfoArray().size());
+       
+       //add hotel
+       ok = addBooking(hotels.getHotelInfoArray().get(0).getBookingNumber(),"hotel",date, cId, 2);       
+       assertEquals(true,ok);
+       
+       //add fligt
+       ok = addBooking(info.getFlightInformation().get(1).getBookingNumber(),"flight",info.getFlightInformation().get(1).getFlight().getDateStart(), cId, 2);
+       assertEquals(true,ok);
+       
+       //add fligt
+       ok = addBooking(info.getFlightInformation().get(1).getBookingNumber(),"flight",info.getFlightInformation().get(1).getFlight().getDateStart(), cId, 2);
+       assertEquals(true,ok);
+       
+       //add hotel
+       ok = addBooking(hotels.getHotelInfoArray().get(1).getBookingNumber(),"hotel",date, cId, 2);       
+       assertEquals(true,ok);   
+       
        
        ItineraryType itinerary = getItinerary(cId, 2);
        assertEquals("planning",itinerary.getStatus());
-       assertEquals(2,itinerary.getBookings().size());
+       assertEquals(5,itinerary.getBookings().size());
        System.out.println(itinerary.getItineraryStartDate());
        for (ws.travelgood.BookingType fl : itinerary.getBookings())
        {
@@ -145,23 +164,27 @@ public class BPELTest {
         FlightInfoArray info = getFlights(start,end,date,cId,2);
         assertEquals(3,info.getFlightInformation().size());
         
-       boolean ok2 = addBooking(info.getFlightInformation().get(0).getBookingNumber(),"flight",info.getFlightInformation().get(0).getFlight().getDateStart(), cId, 2);
-       boolean ok3 = addBooking(info.getFlightInformation().get(0).getBookingNumber(),"flight",info.getFlightInformation().get(0).getFlight().getDateStart(), cId, 2);
-       boolean ok4 = addBooking(1,"flight",info.getFlightInformation().get(0).getFlight().getDateStart(), cId, 2);
-       boolean ok5 = addBooking(info.getFlightInformation().get(0).getBookingNumber(),"flight",info.getFlightInformation().get(0).getFlight().getDateStart(), cId, 2);
-       assertEquals(true,ok2);
-       assertEquals(true,ok3);
-       assertEquals(true,ok4);
-       assertEquals(true,ok5);
+       ok = addBooking(info.getFlightInformation().get(0).getBookingNumber(),"flight",info.getFlightInformation().get(0).getFlight().getDateStart(), cId, 2);
+       assertEquals(true,ok);
+       
+       //Get the hotels
+       HotelInfoArray  hotels = getHotels("Moscow",date,date,cId,2);
+       assertEquals(2,hotels.getHotelInfoArray().size());
+       //add hotel
+       ok = addBooking(1,"hotel",date, cId, 2);       
+       assertEquals(true,ok);
+       
+       ok = addBooking(info.getFlightInformation().get(1).getBookingNumber(),"flight",info.getFlightInformation().get(1).getFlight().getDateStart(), cId, 2);
+       assertEquals(true,ok);
        
        ItineraryType itinerary = getItinerary(cId, 2);
        assertEquals("planning",itinerary.getStatus());
-       assertEquals(4,itinerary.getBookings().size());
+       assertEquals(3,itinerary.getBookings().size());
        for (ws.travelgood.BookingType fl : itinerary.getBookings())
        {
            assertEquals("unconfirmed",fl.getStatus());
        }
-              //Book the itinerary
+       //Book the itinerary
        boolean book =  bookItinerary(cId,creditcard,2);
        assertEquals("planning",itinerary.getStatus());
        assertEquals(false,book);
@@ -169,9 +192,8 @@ public class BPELTest {
        //check that the bookings is unconfirmed by getting the itinerary again.
        itinerary = getItinerary(cId, 2);
        assertEquals("cancelled",itinerary.getBookings().get(0).getStatus());
-       assertEquals("cancelled",itinerary.getBookings().get(1).getStatus());
-       assertEquals("unconfirmed",itinerary.getBookings().get(2).getStatus());
-       assertEquals("unconfirmed",itinerary.getBookings().get(3).getStatus());  
+       assertEquals("unconfirmed",itinerary.getBookings().get(1).getStatus());
+       assertEquals("unconfirmed",itinerary.getBookings().get(2).getStatus());  
        
     }
       /**
@@ -189,13 +211,21 @@ public class BPELTest {
         FlightInfoArray info = getFlights(start,end,date,cId,2);
         assertEquals(3,info.getFlightInformation().size());
         
-       boolean ok2 = addBooking(info.getFlightInformation().get(0).getBookingNumber(),"flight",info.getFlightInformation().get(0).getFlight().getDateStart(), cId, 2);
-       boolean ok3 = addBooking(info.getFlightInformation().get(0).getBookingNumber(),"flight",info.getFlightInformation().get(0).getFlight().getDateStart(), cId, 2);
-       assertEquals(true,ok2);
-       assertEquals(true,ok3);
+       ok = addBooking(info.getFlightInformation().get(0).getBookingNumber(),"flight",info.getFlightInformation().get(0).getFlight().getDateStart(), cId, 2);
+       assertEquals(true,ok);
+       
+       //Get the hotels
+       HotelInfoArray  hotels = getHotels("Moscow",date,date,cId,2);
+       assertEquals(2,hotels.getHotelInfoArray().size());
+       //add hotel
+       ok = addBooking(hotels.getHotelInfoArray().get(0).getBookingNumber(),"hotel",date, cId, 2);       
+       assertEquals(true,ok);
+       
+       ok = addBooking(info.getFlightInformation().get(0).getBookingNumber(),"flight",info.getFlightInformation().get(0).getFlight().getDateStart(), cId, 2);
+       assertEquals(true,ok);
        
        ItineraryType itinerary = getItinerary(cId, 2);
-       assertEquals(2,itinerary.getBookings().size());
+       assertEquals(3,itinerary.getBookings().size());
        for (ws.travelgood.BookingType fl : itinerary.getBookings())
        {
            assertEquals("unconfirmed",fl.getStatus());
@@ -240,12 +270,19 @@ public class BPELTest {
         FlightInfoArray info = getFlights(start,end,date,cId,2);
         assertEquals(3,info.getFlightInformation().size());
         
-       boolean ok2 = addBooking(info.getFlightInformation().get(0).getBookingNumber(),"flight",info.getFlightInformation().get(0).getFlight().getDateStart(), cId, 2);
-       boolean ok3 = addBooking(info.getFlightInformation().get(2).getBookingNumber(),"flight",info.getFlightInformation().get(0).getFlight().getDateStart(), cId, 2);
-       boolean ok4 = addBooking(info.getFlightInformation().get(1).getBookingNumber(),"flight",info.getFlightInformation().get(0).getFlight().getDateStart(), cId, 2);
-       assertEquals(true,ok2);
-       assertEquals(true,ok3);
-       assertEquals(true,ok4);
+       ok = addBooking(info.getFlightInformation().get(0).getBookingNumber(),"flight",info.getFlightInformation().get(0).getFlight().getDateStart(), cId, 2);
+       assertEquals(true,ok);
+       
+       ok = addBooking(info.getFlightInformation().get(2).getBookingNumber(),"flight",info.getFlightInformation().get(2).getFlight().getDateStart(), cId, 2);
+       assertEquals(true,ok);
+       
+       //Get the hotels
+       HotelInfoArray  hotels = getHotels("Moscow",date,date,cId,2);
+       assertEquals(2,hotels.getHotelInfoArray().size());
+       //add hotel
+       ok = addBooking(hotels.getHotelInfoArray().get(0).getBookingNumber(),"hotel",date, cId, 2);       
+       assertEquals(true,ok);
+       
        
        ItineraryType itinerary = getItinerary(cId, 2);
        assertEquals("planning",itinerary.getStatus());
@@ -319,6 +356,12 @@ public class BPELTest {
         ws.travelgood.TravelGoodService service = new ws.travelgood.TravelGoodService();
         ws.travelgood.TravelGoodPortType port = service.getTravelGoodPortTypeBindingPort();
         return port.getItinerary(customerId, itineraryId);
+    }
+
+    private static HotelInfoArray getHotels(String city, XMLGregorianCalendar startDate, XMLGregorianCalendar endDate, int customerId, int itineraryId) {
+        ws.travelgood.TravelGoodService service = new ws.travelgood.TravelGoodService();
+        ws.travelgood.TravelGoodPortType port = service.getTravelGoodPortTypeBindingPort();
+        return port.getHotels(city, startDate, endDate, customerId, itineraryId);
     }
 
 

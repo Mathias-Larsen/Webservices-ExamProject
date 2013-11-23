@@ -133,7 +133,7 @@ public class HotelReservation {
         HotelBookingType hotelBooking = new HotelBookingType(); 
         
         // hotel 1
-        hotelInfo.setBookingNumber(12345);
+        hotelInfo.setBookingNumber(1234);
         hotelInfo.setNameOfHotelReservationService("Hotels.com");
         hotelInfo.setPrice(300);
         
@@ -153,7 +153,7 @@ public class HotelReservation {
         hotelBooking = new HotelBookingType(); 
         addr = new AddressType();
         
-        hotelInfo.setBookingNumber(54321);
+        hotelInfo.setBookingNumber(4321);
         hotelInfo.setNameOfHotelReservationService("Trivago");
         hotelInfo.setPrice(200);
         

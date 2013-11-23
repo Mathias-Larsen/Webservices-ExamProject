@@ -2,11 +2,12 @@
 <definitions name="travelGood" targetNamespace="http://travelGood.ws"
     xmlns="http://schemas.xmlsoap.org/wsdl/"
     xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
-    xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://travelGood.ws" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:ns="urn://types.airlineReservation.imm.dtu.dk" xmlns:ns0="urn://types.fastmoney.imm.dtu.dk" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop">
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://travelGood.ws" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:ns="urn://types.airlineReservation.imm.dtu.dk" xmlns:ns0="urn://types.fastmoney.imm.dtu.dk" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:ns1="urn://types.hotelReservation.imm.dtu.dk">
     <types>
         <xsd:schema targetNamespace="http://travelGood.ws" xmlns:tns="http://travelGood.ws" xmlns:ns0="urn://types.airlineReservation.imm.dtu.dk">
             <xsd:import schemaLocation="http://localhost:8080/AirlineReservation/AirlineReservationService?xsd=1" namespace="urn://types.airlineReservation.imm.dtu.dk"/>
             <xsd:import namespace="urn://types.fastmoney.imm.dtu.dk" schemaLocation="http://fastmoney.imm.dtu.dk:8080/BankService?xsd=1"/>
+            <xsd:import namespace="urn://types.hotelReservation.imm.dtu.dk" schemaLocation="http://localhost:8080/HotelReservation/HotelReservationService?xsd=1"/>
             <xsd:complexType name="bookingType">
                 <xsd:sequence>
                     <xsd:element name="bookingNumber" type="xsd:int"></xsd:element>
@@ -80,6 +81,16 @@
     <message name="cancelPlanningResponse">
         <part name="response" type="xsd:boolean"/>
     </message>
+    <message name="getHotelsRequest">
+        <part name="city" type="xsd:string"/>
+        <part name="startDate" type="xsd:date"/>
+        <part name="endDate" type="xsd:date"/>
+       <part name="customerId" type="xsd:int"/>
+        <part name="itineraryId" type="xsd:int"/>
+    </message>
+    <message name="getHotelsResponse">
+        <part name="response" type="ns1:hotelInfoArray"/>
+    </message>
     <portType name="travelGoodPortType">
         <operation name="createItinerary">
             <input name="input1" message="tns:itineraryRequest"/>
@@ -108,6 +119,10 @@
         <operation name="cancelPlanning">
             <input name="input8" message="tns:cancelPlanningRequest"/>
             <output name="output8" message="tns:cancelPlanningResponse"/>
+        </operation>
+        <operation name="getHotels">
+            <input name="input7" message="tns:getHotelsRequest"/>
+            <output name="output7" message="tns:getHotelsResponse"/>
         </operation>
     </portType>
     <binding name="travelGoodPortTypeBinding" type="tns:travelGoodPortType">
@@ -166,6 +181,15 @@
                 <soap:body use="literal" namespace="http://travelGood.ws"/>
             </output>
         </operation>
+        <operation name="getHotels">
+            <soap:operation/>
+            <input name="input7">
+                <soap:body use="literal" namespace="http://travelGood.ws"/>
+            </input>
+            <output name="output7">
+                <soap:body use="literal" namespace="http://travelGood.ws"/>
+            </output>
+        </operation>
         <operation name="cancelPlanning">
             <soap:operation/>
             <input name="input8">
@@ -203,4 +227,6 @@ A partner link type characterizes the conversational relationship between two se
     <vprop:propertyAlias propertyName="tns:customerId" messageType="tns:getItineraryRequest" part="customerId"/>
     <vprop:propertyAlias propertyName="tns:itineraryId" messageType="tns:cancelPlanningRequest" part="itineraryId"/>
     <vprop:propertyAlias propertyName="tns:customerId" messageType="tns:cancelPlanningRequest" part="customerId"/>
+    <vprop:propertyAlias propertyName="tns:itineraryId" messageType="tns:getHotelsRequest" part="itineraryId"/>
+    <vprop:propertyAlias propertyName="tns:customerId" messageType="tns:getHotelsRequest" part="customerId"/>
 </definitions>

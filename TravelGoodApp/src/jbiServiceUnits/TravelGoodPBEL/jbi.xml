@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<jbi xmlns="http://java.sun.com/xml/ns/jbi" xmlns:ns0="http://enterprise.netbeans.org/bpel/TravelGoodPBEL/travelGoodPBEL" xmlns:ns1="urn://airlineReservation.imm.dtu.dk" xmlns:ns2="http://travelGood.ws" xmlns:ns3="http://www.sun.com/jbi/descriptor/service-unit" version="1.0">
+<jbi xmlns="http://java.sun.com/xml/ns/jbi" xmlns:ns0="http://enterprise.netbeans.org/bpel/TravelGoodPBEL/travelGoodPBEL" xmlns:ns1="urn://airlineReservation.imm.dtu.dk" xmlns:ns2="urn://hotelReservation.imm.dtu.dk" xmlns:ns3="http://travelGood.ws" xmlns:ns4="http://www.sun.com/jbi/descriptor/service-unit" version="1.0">
     <services binding-component="false">
-        <provides endpoint-name="travelGoodPortTypeRole_myRole" interface-name="ns2:travelGoodPortType" service-name="ns0:PartnerLink1">
-            <ns3:display-name>PartnerLink1</ns3:display-name>
-            <ns3:process-name>travelGoodPBEL</ns3:process-name>
-            <ns3:file-path>travelGoodPBEL.bpel</ns3:file-path>
+        <provides endpoint-name="travelGoodPortTypeRole_myRole" interface-name="ns3:travelGoodPortType" service-name="ns0:PartnerLink1">
+            <ns4:display-name>PartnerLink1</ns4:display-name>
+            <ns4:process-name>travelGoodPBEL</ns4:process-name>
+            <ns4:file-path>travelGoodPBEL.bpel</ns4:file-path>
         </provides>
         <consumes endpoint-name="AirlineReservationRole_partnerRole" interface-name="ns1:AirlineReservationPortType" service-name="ns0:PartnerLink2">
-            <ns3:display-name>PartnerLink2</ns3:display-name>
-            <ns3:process-name>travelGoodPBEL</ns3:process-name>
-            <ns3:file-path>travelGoodPBEL.bpel</ns3:file-path>
+            <ns4:display-name>PartnerLink2</ns4:display-name>
+            <ns4:process-name>travelGoodPBEL</ns4:process-name>
+            <ns4:file-path>travelGoodPBEL.bpel</ns4:file-path>
+        </consumes>
+        <consumes endpoint-name="HotelReservationRole_partnerRole" interface-name="ns2:HotelReservationPortType" service-name="ns0:PartnerLink3">
+            <ns4:display-name>PartnerLink3</ns4:display-name>
+            <ns4:process-name>travelGoodPBEL</ns4:process-name>
+            <ns4:file-path>travelGoodPBEL.bpel</ns4:file-path>
         </consumes>
     </services>
 </jbi>

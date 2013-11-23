@@ -2,5 +2,7 @@
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
     <system systemId="http://localhost:8080/AirlineReservation/AirlineReservationService?wsdl" uri="src/conf/xml-resources/web-service-references/AirlineReservationService/wsdl/localhost_8080/AirlineReservation/AirlineReservationService.wsdl"/>
     <system systemId="http://localhost:8080/AirlineReservation/AirlineReservationService?xsd=1" uri="src/conf/xml-resources/web-service-references/AirlineReservationService/wsdl/localhost_8080/AirlineReservation/AirlineReservationService.xsd_1.xsd"/>
-    <system systemId="http://fastmoney.imm.dtu.dk:8080/BankService?xsd=1" uri="src/conf/xml-resources/web-service-references/AirlineReservationService/wsdl/fastmoney.imm.dtu.dk_8080/BankService.xsd_1.xsd"/>
+    <system systemId="http://localhost:8080/HotelReservation/HotelReservationService?wsdl" uri="src/conf/xml-resources/web-service-references/HotelReservationService/wsdl/localhost_8080/HotelReservation/HotelReservationService.wsdl"/>
+    <system systemId="http://localhost:8080/HotelReservation/HotelReservationService?xsd=1" uri="src/conf/xml-resources/web-service-references/HotelReservationService/wsdl/localhost_8080/HotelReservation/HotelReservationService.xsd_1.xsd"/>
+    <system systemId="http://fastmoney.imm.dtu.dk:8080/BankService?xsd=1" uri="src/conf/xml-resources/web-service-references/HotelReservationService/wsdl/fastmoney.imm.dtu.dk_8080/BankService.xsd_1.xsd"/>
 </catalog>
