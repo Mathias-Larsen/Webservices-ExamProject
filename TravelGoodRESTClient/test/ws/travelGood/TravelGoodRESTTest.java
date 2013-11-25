@@ -366,13 +366,9 @@ public class TravelGoodRESTTest {
                 type(MEDIATYPE_TRAVELGOOD).put(BookingStatusRepresentation.class,creditcard);
         assertEquals(CANCELLED_ITINERARY,resultCancelFlight.getBookingStatus()); 
         
-        //Checking by getting the itinerary
-        linkGetItinerary = resultCancelFlight.getLinkByRelation(SELF_RELATION);
-        getResult = client.resource(linkGetItinerary .getUri()).accept(MEDIATYPE_TRAVELGOOD).type(MEDIATYPE_TRAVELGOOD)
-                .get(ItineraryRepresentation.class);
-        assertEquals(3,getResult.getItineary().getBookings().size());
-        assertEquals(CANCELLED_ITINERARY,getResult.getItineary().getStatus());
-        for(Booking b : getResult.getItineary().getBookings() )
+        assertEquals(3,resultCancelFlight.getIt().getBookings().size());
+        assertEquals(CANCELLED_ITINERARY,resultCancelFlight.getBookingStatus());
+        for(Booking b : resultCancelFlight.getIt().getBookings() )
         {
             assertEquals(CANCELLED_BOOKING,b.getStatus());
         }

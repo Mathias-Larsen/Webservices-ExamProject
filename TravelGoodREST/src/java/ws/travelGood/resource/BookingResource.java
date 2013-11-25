@@ -8,8 +8,14 @@ import dk.dtu.imm.airlinereservation.BookFlightFaultMessage;
 import dk.dtu.imm.airlinereservation.CancelFlightFaultMessage;
 import dk.dtu.imm.hotelreservation.BookHotelFaultMessage;
 import dk.dtu.imm.hotelreservation.CancelHotelFaultMessage;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -31,6 +37,7 @@ import ws.travelGood.data.CreditCardInfoType;
  */
 @Path("itinerary/{cid}/{iid}/booking/{action}")
 public class BookingResource {
+    static Map<String,Thread> threads = new HashMap<String,Thread>();
     
     @PUT
     @Consumes(ItineraryResource.MEDIATYPE_TRAVELGOOD)
@@ -111,8 +118,7 @@ public class BookingResource {
                     }
                 }
             }
-        }
-         
+        }        
         BookingStatusRepresentation response = new BookingStatusRepresentation();
         ItineraryResource.addSelfLink(cid, iid, response);
         if(fail)
@@ -122,8 +128,13 @@ public class BookingResource {
         else
         {
             itinerary.setStatus(ItineraryResource.CANCELLED_ITINERARY);
+            String key = ItineraryResource.createKey(cid, iid);
+            Thread t = threads.get(key);
+            t.interrupt();
         }
+        
         response.setBookingStatus(itinerary.getStatus());
+        response.setIt(itinerary);
         return Response.ok(response).build();
             
     }
@@ -215,12 +226,18 @@ public class BookingResource {
         {
             itinerary.setStatus(ItineraryResource.BOOKED_ITINERARY);
             ItineraryResource.addcancelBookingLink(cid, iid, response); //If the booking is booked, you can only cancel the booking. 
+            String key = ItineraryResource.createKey(cid, iid);
+            
+            Runnable r = new SleepThread(itinerary,key);
+            Thread t = new Thread(r);
+            t.start();
+            threads.put(key, t);
         }
         else
         {
             ItineraryResource.addPlanningLinks(cid, iid, response); //If the booking of one item fails, the planning can continue. 
         }
-        
+        response.setIt(itinerary);
         response.setBookingStatus(itinerary.getStatus());
         return Response.ok(response).build();
     }
@@ -249,5 +266,38 @@ public class BookingResource {
         return port.bookHotel(bookingNumber, creditCardInfo);
     }
 
-
+    private class SleepThread implements Runnable
+    {
+        Itinerary it;
+        String key;
+        public SleepThread(Itinerary it, String key)
+        {
+            this.it = it;
+            this.key = key;
+       }
+        public void run()
+        {
+            Calendar c = Calendar.getInstance();
+            c.set(Calendar.HOUR_OF_DAY, 0);
+            c.set(Calendar.MINUTE, 0);
+            c.set(Calendar.SECOND, 0);
+            
+            String date = it.getDate().toString();
+            DateFormat fm = new SimpleDateFormat("yyyy-MM-dd");
+            Calendar d = Calendar.getInstance();
+            try {
+                d.setTime(fm.parse(date));
+            } catch (ParseException ex) {
+                Logger.getLogger(BookingResource.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            long toSleep = d.getTimeInMillis() - c.getTimeInMillis(); 
+            try {
+                Thread.sleep(toSleep);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(BookingResource.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            ItineraryResource.itinerarys.remove(key);
+            
+        }
+    }
 }
