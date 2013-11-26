@@ -13,7 +13,6 @@ public class ItineraryRepresentation extends Representation {
     public Itinerary getItineary() {
         return itineary;
     }
-
     public void setItineary(Itinerary itineary) {
         this.itineary = itineary;
     }

@@ -83,7 +83,7 @@ public class ItineraryResource {
         {
             addPlanningLinks(cid, iid, itineraryRep); //adding several links which is used when planning.
         }
-        else if(itinerary.getStatus().equals(BOOKED_ITINERARY)) //TODO ADD DAY CHECK
+        else if(itinerary.getStatus().equals(BOOKED_ITINERARY))
         {
             addcancelBookingLink(cid,iid,itineraryRep); //The itinerary is booked and we can cencel it
         }
@@ -131,6 +131,7 @@ public class ItineraryResource {
         itinerarys.remove(key);
         BookingStatusRepresentation response = new BookingStatusRepresentation();
         response.setBookingStatus(CANCELLED_ITINERARY);
+        response.setIt(itinerary);
         
         return Response.ok(response).build();
         

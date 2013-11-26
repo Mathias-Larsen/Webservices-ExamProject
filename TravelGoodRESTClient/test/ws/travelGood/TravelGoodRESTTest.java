@@ -117,7 +117,9 @@ public class TravelGoodRESTTest {
         String iid = newItinearyId();
         String URICreate = String.format("%s/itinerary/%s/%s", baseURI, "2", iid);
         Itinerary itinerary = new Itinerary();
-        ItineraryRepresentation itineraryRep = client.resource(URICreate).accept(MEDIATYPE_TRAVELGOOD).type(MEDIATYPE_TRAVELGOOD).put(ItineraryRepresentation.class,itinerary);
+        ItineraryRepresentation itineraryRep = client.resource(URICreate).
+                accept(MEDIATYPE_TRAVELGOOD).type(MEDIATYPE_TRAVELGOOD).
+                put(ItineraryRepresentation.class,itinerary);
         assertEquals(PLANNING_ITINERARY,itineraryRep.getItineary().getStatus());
         
         Link linkGetFlight = itineraryRep.getLinkByRelation(GETFLIGHTS_RELATION);
@@ -130,7 +132,8 @@ public class TravelGoodRESTTest {
         
         //adding the flights
         ItineraryRepresentation add = client.resource(resultFlight.getLinkByRelation(ADDFLIGHT_RELATION)
-                .getUri()).accept(MEDIATYPE_TRAVELGOOD).type(MEDIATYPE_TRAVELGOOD).put(ItineraryRepresentation.class,resultFlight.getFlightInfo().get(0));
+                .getUri()).accept(MEDIATYPE_TRAVELGOOD).type(MEDIATYPE_TRAVELGOOD).
+                put(ItineraryRepresentation.class,resultFlight.getFlightInfo().get(0));
         assertEquals(1,add.getItineary().getBookings().size());
         
         
@@ -144,22 +147,26 @@ public class TravelGoodRESTTest {
         
         //add hotel
         add = client.resource(resultHotel.getLinkByRelation(ADDHOTEL_RELATION)
-                .getUri()).accept(MEDIATYPE_TRAVELGOOD).type(MEDIATYPE_TRAVELGOOD).put(ItineraryRepresentation.class,resultHotel.getHotelInfo().get(0));
+                .getUri()).accept(MEDIATYPE_TRAVELGOOD).type(MEDIATYPE_TRAVELGOOD).
+                put(ItineraryRepresentation.class,resultHotel.getHotelInfo().get(0));
         assertEquals(2,add.getItineary().getBookings().size());     
         
         //Add flight
         add = client.resource(add.getLinkByRelation(ADDFLIGHT_RELATION)
-                .getUri()).accept(MEDIATYPE_TRAVELGOOD).type(MEDIATYPE_TRAVELGOOD).put(ItineraryRepresentation.class,resultFlight.getFlightInfo().get(1));
+                .getUri()).accept(MEDIATYPE_TRAVELGOOD).type(MEDIATYPE_TRAVELGOOD).
+                put(ItineraryRepresentation.class,resultFlight.getFlightInfo().get(1));
         assertEquals(3,add.getItineary().getBookings().size());
 
         //Add flight
         add = client.resource(add.getLinkByRelation(ADDFLIGHT_RELATION)
-                .getUri()).accept(MEDIATYPE_TRAVELGOOD).type(MEDIATYPE_TRAVELGOOD).put(ItineraryRepresentation.class,resultFlight.getFlightInfo().get(2));
+                .getUri()).accept(MEDIATYPE_TRAVELGOOD).type(MEDIATYPE_TRAVELGOOD).
+                put(ItineraryRepresentation.class,resultFlight.getFlightInfo().get(2));
         assertEquals(4,add.getItineary().getBookings().size());
         
         //add hotel
         add = client.resource(resultHotel.getLinkByRelation(ADDHOTEL_RELATION)
-                .getUri()).accept(MEDIATYPE_TRAVELGOOD).type(MEDIATYPE_TRAVELGOOD).put(ItineraryRepresentation.class,resultHotel.getHotelInfo().get(1));
+                .getUri()).accept(MEDIATYPE_TRAVELGOOD).type(MEDIATYPE_TRAVELGOOD).
+                put(ItineraryRepresentation.class,resultHotel.getHotelInfo().get(1));
         assertEquals(5,add.getItineary().getBookings().size());
         
         for(Booking b : add.getItineary().getBookings() )
@@ -169,14 +176,17 @@ public class TravelGoodRESTTest {
         
         //booking the itinerary
         Link bookLink = add.getLinkByRelation(BOOKING_RELATION);
-        BookingStatusRepresentation resultBookFlight = client.resource(bookLink.getUri()).accept(MEDIATYPE_TRAVELGOOD).type(MEDIATYPE_TRAVELGOOD).put(BookingStatusRepresentation.class,creditcard);
+        BookingStatusRepresentation resultBookFlight = client.resource(bookLink.getUri()).
+                accept(MEDIATYPE_TRAVELGOOD).type(MEDIATYPE_TRAVELGOOD).
+                put(BookingStatusRepresentation.class,creditcard);
         assertEquals(BOOKED_ITINERARY,resultBookFlight.getBookingStatus());
         
         //Checking by getting the itinerary
         Link linkGetItinerary = add.getLinkByRelation(SELF_RELATION);
-        ItineraryRepresentation getResult = client.resource(linkGetItinerary.getUri()).accept(MEDIATYPE_TRAVELGOOD).type(MEDIATYPE_TRAVELGOOD).get(ItineraryRepresentation.class);
+        ItineraryRepresentation getResult = client.resource(linkGetItinerary.getUri()).get(ItineraryRepresentation.class);
         assertEquals(5,getResult.getItineary().getBookings().size());
         assertEquals(BOOKED_ITINERARY,getResult.getItineary().getStatus());
+        
         for(Booking b : getResult.getItineary().getBookings() )
         {
             assertEquals(CONFIRMED_BOOKING,b.getStatus());
@@ -196,30 +206,35 @@ public class TravelGoodRESTTest {
         String iid = newItinearyId();
         String URICreate = String.format("%s/itinerary/%s/%s", baseURI, "2", iid);
         Itinerary itinerary = new Itinerary();
-        ItineraryRepresentation itineraryRep = client.resource(URICreate).accept(MEDIATYPE_TRAVELGOOD).type(MEDIATYPE_TRAVELGOOD).put(ItineraryRepresentation.class,itinerary);
+        ItineraryRepresentation itineraryRep = client.resource(URICreate).
+                accept(MEDIATYPE_TRAVELGOOD).type(MEDIATYPE_TRAVELGOOD).
+                put(ItineraryRepresentation.class,itinerary);
         assertEquals(PLANNING_ITINERARY,itineraryRep.getItineary().getStatus());
         
         Link linkGetFlight = itineraryRep.getLinkByRelation(GETFLIGHTS_RELATION);
         assertNotNull(linkGetFlight);
         
         //get flights
-        GetFlightRepresentation resultFlight = client.resource(linkGetFlight.getUri()).queryParam("start", start).queryParam("end", end).queryParam("date", date.toString()).get(GetFlightRepresentation.class);
+        GetFlightRepresentation resultFlight = client.resource(linkGetFlight.getUri()).
+                queryParam("start", start).queryParam("end", end).
+                queryParam("date", date.toString()).get(GetFlightRepresentation.class);
         assertEquals(3,resultFlight.getFlightInfo().size());  
         
         //adding the flight
         ItineraryRepresentation resultAddFlight = client.resource(resultFlight.getLinkByRelation(ADDFLIGHT_RELATION)
-                .getUri()).accept(MEDIATYPE_TRAVELGOOD).type(MEDIATYPE_TRAVELGOOD).put(ItineraryRepresentation.class,resultFlight.getFlightInfo().get(0));
+                .getUri()).accept(MEDIATYPE_TRAVELGOOD).type(MEDIATYPE_TRAVELGOOD).
+                put(ItineraryRepresentation.class,resultFlight.getFlightInfo().get(0));
         assertEquals(1,resultAddFlight.getItineary().getBookings().size());
-        assertEquals("unconfirmed",resultAddFlight.getItineary().getBookings().get(0).getStatus());
+        assertEquals(UNCONFIRMED_BOOKING,resultAddFlight.getItineary().getBookings().get(0).getStatus());
         
         //cancel planning
         Link link2 = resultAddFlight.getLinkByRelation(CANCELPLANNING_RELATION);
         BookingStatusRepresentation resultCancel = client.resource(link2.getUri()).delete(BookingStatusRepresentation.class);
-        assertEquals("cancelled",resultCancel.getBookingStatus());
+        assertEquals(CANCELLED_ITINERARY,resultCancel.getBookingStatus());
         assertEquals(0,resultCancel.getLinks().size());
        
         //Checking that the itinerary is removed
-        ClientResponse  response = client.resource(URICreate).accept(MEDIATYPE_TRAVELGOOD).type(MEDIATYPE_TRAVELGOOD).get(ClientResponse.class);
+        ClientResponse  response = client.resource(URICreate).get(ClientResponse.class);
         assertEquals(javax.ws.rs.core.Response.Status.NOT_FOUND.getStatusCode(),response.getStatus());
      }
     
@@ -235,7 +250,9 @@ public class TravelGoodRESTTest {
         String iid = newItinearyId();
         String URICreate = String.format("%s/itinerary/%s/%s", baseURI, "2", iid);
         Itinerary itinerary = new Itinerary();
-        ItineraryRepresentation itineraryRep = client.resource(URICreate).accept(MEDIATYPE_TRAVELGOOD).type(MEDIATYPE_TRAVELGOOD).put(ItineraryRepresentation.class,itinerary);
+        ItineraryRepresentation itineraryRep = client.resource(URICreate).
+                accept(MEDIATYPE_TRAVELGOOD).type(MEDIATYPE_TRAVELGOOD).
+                put(ItineraryRepresentation.class,itinerary);
         assertEquals(PLANNING_ITINERARY,itineraryRep.getItineary().getStatus());
         
         Link linkGetFlight = itineraryRep.getLinkByRelation(GETFLIGHTS_RELATION);
@@ -248,27 +265,31 @@ public class TravelGoodRESTTest {
         
         //adding the flights
         ItineraryRepresentation add = client.resource(resultFlight.getLinkByRelation(ADDFLIGHT_RELATION)
-                .getUri()).accept(MEDIATYPE_TRAVELGOOD).type(MEDIATYPE_TRAVELGOOD).put(ItineraryRepresentation.class,resultFlight.getFlightInfo().get(0));
+                .getUri()).accept(MEDIATYPE_TRAVELGOOD).type(MEDIATYPE_TRAVELGOOD).
+                put(ItineraryRepresentation.class,resultFlight.getFlightInfo().get(0));
         assertEquals(1,add.getItineary().getBookings().size());
            
         
         FlightInfo inf = resultFlight.getFlightInfo().get(1);
         inf.setBookingNumber(12);
-        add = client.resource(resultFlight.getLinkByRelation(ADDFLIGHT_RELATION).getUri()).accept(MEDIATYPE_TRAVELGOOD)
-                .type(MEDIATYPE_TRAVELGOOD).put(ItineraryRepresentation.class,inf);
+        add = client.resource(resultFlight.getLinkByRelation(ADDFLIGHT_RELATION).getUri()).
+                accept(MEDIATYPE_TRAVELGOOD).type(MEDIATYPE_TRAVELGOOD)
+                .put(ItineraryRepresentation.class,inf);
         
-                Link linkGetHotel = add.getLinkByRelation(GETHOTELS_RELATION);
+        Link linkGetHotel = add.getLinkByRelation(GETHOTELS_RELATION);
         assertNotNull(linkGetHotel);
         assertEquals(2,add.getItineary().getBookings().size()); 
          
         //get hotels
         GetHotelRepresentation resultHotel = client.resource(linkGetHotel.getUri()).queryParam("city", start).
-                queryParam("start", date.toString()).queryParam("end", date.toString()).get(GetHotelRepresentation.class);
+                queryParam("start", date.toString()).queryParam("end", date.toString())
+                .get(GetHotelRepresentation.class);
         assertEquals(2,resultHotel.getHotelInfo().size());  
         
         //add hotel
         add = client.resource(resultHotel.getLinkByRelation(ADDHOTEL_RELATION)
-                .getUri()).accept(MEDIATYPE_TRAVELGOOD).type(MEDIATYPE_TRAVELGOOD).put(ItineraryRepresentation.class,resultHotel.getHotelInfo().get(0));
+                .getUri()).accept(MEDIATYPE_TRAVELGOOD).type(MEDIATYPE_TRAVELGOOD)
+                .put(ItineraryRepresentation.class,resultHotel.getHotelInfo().get(0));
         assertEquals(3,add.getItineary().getBookings().size());
         for(Booking b : add.getItineary().getBookings() )
         {
@@ -277,14 +298,14 @@ public class TravelGoodRESTTest {
         
         //try to book the itinerary which fails
         Link bookLink = add.getLinkByRelation(BOOKING_RELATION);
-        BookingStatusRepresentation resultBookFlight = client.resource(bookLink.getUri()).accept(MEDIATYPE_TRAVELGOOD).
-                type(MEDIATYPE_TRAVELGOOD).put(BookingStatusRepresentation.class,creditcard);
+        BookingStatusRepresentation resultBookFlight = client.resource(bookLink.getUri())
+                .accept(MEDIATYPE_TRAVELGOOD).type(MEDIATYPE_TRAVELGOOD)
+                .put(BookingStatusRepresentation.class,creditcard);
         assertEquals(PLANNING_ITINERARY,resultBookFlight.getBookingStatus());
         
         //Checking by getting the itinerary
         Link linkGetItinerary = resultBookFlight.getLinkByRelation(SELF_RELATION);
-        ItineraryRepresentation getResult = client.resource(linkGetItinerary.getUri()).accept(MEDIATYPE_TRAVELGOOD).
-                type(MEDIATYPE_TRAVELGOOD).get(ItineraryRepresentation.class);
+        ItineraryRepresentation getResult = client.resource(linkGetItinerary.getUri()).get(ItineraryRepresentation.class);
         assertEquals(3,getResult.getItineary().getBookings().size());
         assertEquals(PLANNING_ITINERARY,getResult.getItineary().getStatus());
         
@@ -304,7 +325,8 @@ public class TravelGoodRESTTest {
         String iid = newItinearyId();
         String URICreate = String.format("%s/itinerary/%s/%s", baseURI, "2", iid);
         Itinerary itinerary = new Itinerary();
-        ItineraryRepresentation itineraryRep = client.resource(URICreate).accept(MEDIATYPE_TRAVELGOOD).type(MEDIATYPE_TRAVELGOOD).put(ItineraryRepresentation.class,itinerary);
+        ItineraryRepresentation itineraryRep = client.resource(URICreate).accept(MEDIATYPE_TRAVELGOOD)
+                .type(MEDIATYPE_TRAVELGOOD).put(ItineraryRepresentation.class,itinerary);
         assertEquals(PLANNING_ITINERARY,itineraryRep.getItineary().getStatus());
         
         Link linkGetFlight = itineraryRep.getLinkByRelation(GETFLIGHTS_RELATION);
@@ -312,12 +334,14 @@ public class TravelGoodRESTTest {
         
         //get flights
         GetFlightRepresentation resultFlight = client.resource(linkGetFlight.getUri()).queryParam("start", start).
-                queryParam("end", end).queryParam("date", date.toString()).get(GetFlightRepresentation.class);
+                queryParam("end", end).queryParam("date", date.toString())
+                .get(GetFlightRepresentation.class);
         assertEquals(3,resultFlight.getFlightInfo().size());  
         
         //adding the flights
         ItineraryRepresentation add = client.resource(resultFlight.getLinkByRelation(ADDFLIGHT_RELATION)
-                .getUri()).accept(MEDIATYPE_TRAVELGOOD).type(MEDIATYPE_TRAVELGOOD).put(ItineraryRepresentation.class,resultFlight.getFlightInfo().get(0));
+                .getUri()).accept(MEDIATYPE_TRAVELGOOD).type(MEDIATYPE_TRAVELGOOD)
+                .put(ItineraryRepresentation.class,resultFlight.getFlightInfo().get(0));
         assertEquals(1,add.getItineary().getBookings().size());
            
         
@@ -351,8 +375,7 @@ public class TravelGoodRESTTest {
         
         //Checking by getting the itinerary
         Link linkGetItinerary = resultBookFlight.getLinkByRelation(SELF_RELATION);
-        ItineraryRepresentation getResult = client.resource(linkGetItinerary.getUri()).accept(MEDIATYPE_TRAVELGOOD).
-                type(MEDIATYPE_TRAVELGOOD).get(ItineraryRepresentation.class);
+        ItineraryRepresentation getResult = client.resource(linkGetItinerary.getUri()).get(ItineraryRepresentation.class);
         assertEquals(3,getResult.getItineary().getBookings().size());
         assertEquals(BOOKED_ITINERARY,getResult.getItineary().getStatus());
         for(Booking b : getResult.getItineary().getBookings() )
@@ -386,7 +409,8 @@ public class TravelGoodRESTTest {
         String iid = newItinearyId();
         String URICreate = String.format("%s/itinerary/%s/%s", baseURI, "2", iid);
         Itinerary itinerary = new Itinerary();
-        ItineraryRepresentation itineraryRep = client.resource(URICreate).accept(MEDIATYPE_TRAVELGOOD).type(MEDIATYPE_TRAVELGOOD).put(ItineraryRepresentation.class,itinerary);
+        ItineraryRepresentation itineraryRep = client.resource(URICreate).accept(MEDIATYPE_TRAVELGOOD).
+                type(MEDIATYPE_TRAVELGOOD).put(ItineraryRepresentation.class,itinerary);
         assertEquals(PLANNING_ITINERARY,itineraryRep.getItineary().getStatus());
         
         Link linkGetFlight = itineraryRep.getLinkByRelation(GETFLIGHTS_RELATION);
@@ -399,7 +423,8 @@ public class TravelGoodRESTTest {
         
         //adding the flights
         ItineraryRepresentation add = client.resource(resultFlight.getLinkByRelation(ADDFLIGHT_RELATION)
-                .getUri()).accept(MEDIATYPE_TRAVELGOOD).type(MEDIATYPE_TRAVELGOOD).put(ItineraryRepresentation.class,resultFlight.getFlightInfo().get(0));
+                .getUri()).accept(MEDIATYPE_TRAVELGOOD).type(MEDIATYPE_TRAVELGOOD).
+                put(ItineraryRepresentation.class,resultFlight.getFlightInfo().get(0));
         assertEquals(1,add.getItineary().getBookings().size());
            
         
@@ -418,7 +443,8 @@ public class TravelGoodRESTTest {
         
         //add hotel
         add = client.resource(resultHotel.getLinkByRelation(ADDHOTEL_RELATION)
-                .getUri()).accept(MEDIATYPE_TRAVELGOOD).type(MEDIATYPE_TRAVELGOOD).put(ItineraryRepresentation.class,resultHotel.getHotelInfo().get(0));
+                .getUri()).accept(MEDIATYPE_TRAVELGOOD).type(MEDIATYPE_TRAVELGOOD).
+                put(ItineraryRepresentation.class,resultHotel.getHotelInfo().get(0));
         assertEquals(3,add.getItineary().getBookings().size());
         for(Booking b : add.getItineary().getBookings() )
         {
@@ -433,8 +459,7 @@ public class TravelGoodRESTTest {
         
         //Checking by getting the itinerary
         Link linkGetItinerary = resultBookFlight.getLinkByRelation(SELF_RELATION);
-        ItineraryRepresentation getResult = client.resource(linkGetItinerary.getUri()).accept(MEDIATYPE_TRAVELGOOD).
-                type(MEDIATYPE_TRAVELGOOD).get(ItineraryRepresentation.class);
+        ItineraryRepresentation getResult = client.resource(linkGetItinerary.getUri()).get(ItineraryRepresentation.class);
         assertEquals(3,getResult.getItineary().getBookings().size());
         assertEquals(BOOKED_ITINERARY,getResult.getItineary().getStatus());
         for(Booking b : getResult.getItineary().getBookings() )
@@ -450,7 +475,7 @@ public class TravelGoodRESTTest {
         
         //Checking by getting the itinerary
         linkGetItinerary = resultCancelFlight.getLinkByRelation(SELF_RELATION);
-        getResult = client.resource(linkGetItinerary.getUri()).accept(MEDIATYPE_TRAVELGOOD).type(MEDIATYPE_TRAVELGOOD).get(ItineraryRepresentation.class);
+        getResult = client.resource(linkGetItinerary.getUri()).get(ItineraryRepresentation.class);
         
         assertEquals(CANCELLED_BOOKING,getResult.getItineary().getBookings().get(0).getStatus());
         assertEquals(CONFIRMED_BOOKING,getResult.getItineary().getBookings().get(1).getStatus());

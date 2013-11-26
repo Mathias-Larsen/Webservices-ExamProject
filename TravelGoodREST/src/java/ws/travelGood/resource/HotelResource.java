@@ -76,8 +76,13 @@ public class HotelResource {
     public Response getHotelsFromWS(@PathParam("cid") String cid, @PathParam("iid") String iid,
     @QueryParam("city") String city,@QueryParam("start") String start,@QueryParam("end") String end )
     {
+        String key = ItineraryResource.createKey(cid, iid);
+        Itinerary itinerary = ItineraryResource.itinerarys.get(key);
+        if (itinerary == null) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
         XMLGregorianCalendar startDate = stringToDate(start);
-         XMLGregorianCalendar endDate = stringToDate(end);
+        XMLGregorianCalendar endDate = stringToDate(end);
         
         List<HotelInfo> hotelInfo = new ArrayList<HotelInfo>();
         List<HotelInfoType> hotelReservation = getHotels(city,startDate,endDate);

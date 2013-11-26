@@ -101,6 +101,11 @@ public class FlightResource {
     public Response getFlightsFromWS(@PathParam("cid") String cid, @PathParam("iid") String iid,
     @QueryParam("start") String start,@QueryParam("end") String end,@QueryParam("date") String date )
     {
+        String key = ItineraryResource.createKey(cid, iid);
+        Itinerary itinerary = ItineraryResource.itinerarys.get(key);
+        if (itinerary == null) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
         XMLGregorianCalendar date1 = stringToDate(date);
         
         List<FlightInfo> flightInfo = new ArrayList<FlightInfo>();

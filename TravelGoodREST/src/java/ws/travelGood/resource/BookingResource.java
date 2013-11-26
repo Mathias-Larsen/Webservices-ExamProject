@@ -120,9 +120,10 @@ public class BookingResource {
             }
         }        
         BookingStatusRepresentation response = new BookingStatusRepresentation();
-        ItineraryResource.addSelfLink(cid, iid, response);
+        
         if(fail)
         {
+            ItineraryResource.addSelfLink(cid, iid, response);
             itinerary.setStatus(ItineraryResource.FAILCANCELLED_ITINERARY);
         }
         else

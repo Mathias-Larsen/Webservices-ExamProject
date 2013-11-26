@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
 /**
- * @author Jesper
+ * @author Jesper 
+ * Inspiration from Hub
  */
 public abstract class Representation {
 

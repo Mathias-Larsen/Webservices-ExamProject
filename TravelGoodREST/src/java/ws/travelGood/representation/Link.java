@@ -5,6 +5,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * @author Jesper
+ * Inspiration from Hub
  */
 @XmlRootElement()
 public class Link {
