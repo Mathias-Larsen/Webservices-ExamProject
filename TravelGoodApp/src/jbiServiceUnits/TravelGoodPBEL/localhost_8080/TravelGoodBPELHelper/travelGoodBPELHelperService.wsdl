@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is Metro/2.1.1 (branches/2.1-6844; 2011-07-29T12:07:24+0000) JAXWS-RI/2.2.5 JAXWS/2.2. --><definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="urn://airlineReservation.imm.dtu.dk" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" name="travelGoodBPELHelper" targetNamespace="urn://airlineReservation.imm.dtu.dk">
+    <types/>
+    <message name="subtractDayRequest">
+        <part name="input" type="xsd:date"/>
+    </message>
+    <message name="subtractDayResponse">
+        <part name="output" type="xsd:date"/>
+    </message>
+    <portType name="travelGoodBPELHelperPortType">
+        <operation name="subtractDay">
+            <input name="input1" message="tns:subtractDayRequest"/>
+            <output name="output1" message="tns:subtractDayResponse"/>
+        </operation>
+    </portType>
+    <binding name="travelGoodBPELHelperBinding" type="tns:travelGoodBPELHelperPortType">
+        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="subtractDay">
+            <soap:operation/>
+            <input name="input1">
+                <soap:body use="literal" namespace="urn://airlineReservation.imm.dtu.dk"/>
+            </input>
+            <output name="output1">
+                <soap:body use="literal" namespace="urn://airlineReservation.imm.dtu.dk"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="travelGoodBPELHelperService">
+        <port name="travelGoodBPELHelperPort" binding="tns:travelGoodBPELHelperBinding">
+            <soap:address location="http://localhost:8080/TravelGoodBPELHelper/travelGoodBPELHelperService"/>
+        </port>
+    </service>
+    <plnk:partnerLinkType name="travelGoodBPELHelper">
+        <!-- A partner link type is automatically generated when a new port type is added. Partner link types are used by BPEL processes. 
+In a BPEL process, a partner link represents the interaction between the BPEL process and a partner service. Each partner link is associated with a partner link type.
+A partner link type characterizes the conversational relationship between two services. The partner link type can have one or two roles.-->
+        <plnk:role name="travelGoodBPELHelperPortTypeRole" portType="tns:travelGoodBPELHelperPortType"/>
+    </plnk:partnerLinkType>
+</definitions>

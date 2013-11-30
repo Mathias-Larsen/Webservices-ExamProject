@@ -2,6 +2,7 @@
 <jbi xmlns="http://java.sun.com/xml/ns/jbi" xmlns:ns1="http://enterprise.netbeans.org/bpel/TravelGoodPBEL/travelGoodPBEL" xmlns:ns2="urn://airlineReservation.imm.dtu.dk" xmlns:ns3="http://travelGood.ws" xmlns:ns4="urn://hotelReservation.imm.dtu.dk" version="1.0">
     <services binding-component="true">
         <provides endpoint-name="AirlineReservationPortTypeBindingPort" interface-name="ns2:AirlineReservationPortType" service-name="ns2:AirlineReservationService"/>
+        <provides endpoint-name="travelGoodBPELHelperPort" interface-name="ns2:travelGoodBPELHelperPortType" service-name="ns2:travelGoodBPELHelperService"/>
         <provides endpoint-name="HotelReservationPortTypeBindingPort" interface-name="ns4:HotelReservationPortType" service-name="ns4:HotelReservationService"/>
         <consumes endpoint-name="travelGoodPortTypeBindingPort" interface-name="ns3:travelGoodPortType" service-name="ns3:travelGoodService"/>
     </services>

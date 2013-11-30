@@ -14,13 +14,18 @@
     <import namespace="urn://airlineReservation.imm.dtu.dk" location="http://localhost:8080/AirlineReservation/AirlineReservationService?wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
     <import namespace="http://enterprise.netbeans.org/bpel/HotelReservationServiceWrapper" location="HotelReservationServiceWrapper.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
     <import namespace="urn://hotelReservation.imm.dtu.dk" location="http://localhost:8080/HotelReservation/HotelReservationService?wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
-    <partnerLinks>
+     <import namespace="urn://airlineReservation.imm.dtu.dk" location="http://localhost:8080/TravelGoodBPELHelper/travelGoodBPELHelperService?wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+     <partnerLinks>
         <partnerLink name="PartnerLink2" xmlns:tns="urn://airlineReservation.imm.dtu.dk" partnerLinkType="tns:AirlineReservationLink" partnerRole="AirlineReservationRole"/>
         <partnerLink name="PartnerLink3" xmlns:tns="http://enterprise.netbeans.org/bpel/HotelReservationServiceWrapper" partnerLinkType="tns:HotelReservationLinkType" partnerRole="HotelReservationRole"/>
-        <partnerLink name="PartnerLink1" xmlns:tns="http://travelGood.ws" partnerLinkType="tns:travelGood" myRole="travelGoodPortTypeRole"/>
+         <partnerLink name="PartnerLink4" xmlns:tns="urn://airlineReservation.imm.dtu.dk" partnerLinkType="tns:travelGoodBPELHelper" partnerRole="travelGoodBPELHelperPortTypeRole"/>
+         <partnerLink name="PartnerLink1" xmlns:tns="http://travelGood.ws" partnerLinkType="tns:travelGood" myRole="travelGoodPortTypeRole"/>
     </partnerLinks>
     <variables>
-        <variable name="GetHotelsOut" messageType="ns1:getHotelsResponse"/>
+         <variable name="dayBefore" type="xsd:date"/>
+         <variable name="SubtractDayOut" xmlns:tns="urn://airlineReservation.imm.dtu.dk" messageType="tns:subtractDayResponse"/>
+         <variable name="SubtractDayIn" xmlns:tns="urn://airlineReservation.imm.dtu.dk" messageType="tns:subtractDayRequest"/>
+         <variable name="GetHotelsOut" messageType="ns1:getHotelsResponse"/>
         <variable name="GetHotelsOutWS" xmlns:tns="urn://hotelReservation.imm.dtu.dk" messageType="tns:getHotelsResponse"/>
         <variable name="GetHotelsInWS" xmlns:tns="urn://hotelReservation.imm.dtu.dk" messageType="tns:getHotels"/>
         <variable name="GetHotelsIn" messageType="ns1:getHotelsRequest"/>
@@ -80,6 +85,10 @@
                 <from>'2030-11-20T14:48:10.67+01:00'</from>
                 <to>$itinerary/itineraryStartDate</to>
             </copy>
+             <copy>
+                  <from>'2030-11-20T14:48:10.67+01:00'</from>
+                  <to variable="dayBefore"/>
+             </copy>
         </assign>
         <reply name="replyCreateItinerary" partnerLink="PartnerLink1" operation="createItinerary" xmlns:tns="http://travelGood.ws" portType="tns:travelGoodPortType" variable="CreateItineraryOut"/>
         <repeatUntil name="RepeatTravelGoodProcessUntilDone" xmlns:tns="urn://airlineReservation.imm.dtu.dk">
@@ -137,7 +146,8 @@
                                            <sequence name="Sequence9">
                                                 <if name="ifDateEalier">
                                                     <condition>sxxf:date-less-than($AddBookingIn.date, $itinerary/itineraryStartDate)</condition>
-                                                    <assign name="AssignAddItinerary">
+                                                     <sequence name="Sequence18">
+                                                          <assign name="AssignAddItinerary">
                                                                <copy>
                                                                          <from variable="AddBookingIn" part="bookingNumber"/>
                                                                               <to>$itinerary/bookings[$bookingSize]/bookingNumber
@@ -166,12 +176,24 @@
                                                                                         </sxed:editor>
                                                                               </to>
                                                                     </copy>
-                                                        <copy>
-                                                            <from variable="AddBookingIn" part="date"/>
-                                                            <to>$itinerary/itineraryStartDate</to>
-                                                        </copy>
-                                                    </assign>
-                                                          <else>
+                                                               <copy>
+                                                                    <from variable="AddBookingIn" part="date"/>
+                                                                    <to>$itinerary/itineraryStartDate</to>
+                                                               </copy>
+                                                               <copy>
+                                                                    <from variable="AddBookingIn" part="date"/>
+                                                                    <to variable="SubtractDayIn" part="input"/>
+                                                               </copy>
+                                                          </assign>
+                                                          <invoke name="subtractDay" partnerLink="PartnerLink4" operation="subtractDay" portType="tns:travelGoodBPELHelperPortType" inputVariable="SubtractDayIn" outputVariable="SubtractDayOut"/>
+                                                          <assign name="Assign20">
+                                                               <copy>
+                                                                    <from variable="SubtractDayOut" part="output"/>
+                                                                    <to variable="dayBefore"/>
+                                                               </copy>
+                                                          </assign>
+                                                     </sequence>
+                                                     <else>
                                                                <assign name="AssignAddItinerary3">
                                                                          <copy>
                                                                                    <from variable="AddBookingIn" part="bookingNumber"/>
@@ -220,7 +242,7 @@
                                                 </assign>
                                            </else>
                                       </if>
-                                          <reply name="ReplyAddFlight" partnerLink="PartnerLink1" operation="addBooking" portType="ns1:travelGoodPortType" variable="AddBookingOut"/>
+                                          <reply name="ReplyAddBooking" partnerLink="PartnerLink1" operation="addBooking" portType="ns1:travelGoodPortType" variable="AddBookingOut"/>
                                   </sequence>
                           </onMessage>
                           <onMessage partnerLink="PartnerLink1" operation="getItinerary" portType="ns1:travelGoodPortType" variable="GetItineraryIn">
@@ -643,13 +665,18 @@
                            </sequence>
                        </onMessage>
                        <onAlarm>
-                           <until>$itinerary/itineraryStartDate</until>
-                           <assign name="setCancelled">
-                               <copy>
-                                   <from>'PlanningCancelled'</from>
-                                   <to>$itinerary/status</to>
-                               </copy>
-                           </assign>
+                            <until>$dayBefore</until>
+                            <sequence name="Sequence19">
+                                 <if name="If9">
+                                      <condition>'booked' = $itinerary/status</condition>
+                                      <assign name="setCancelled">
+                                           <copy>
+                                                <from>'PlanningCancelled'</from>
+                                                     <to>$itinerary/status</to>
+                                           </copy>
+                                      </assign>
+                                 </if>
+                            </sequence>
                        </onAlarm>
                    </pick>
               </sequence>

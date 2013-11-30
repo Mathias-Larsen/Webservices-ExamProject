@@ -31,6 +31,10 @@
                 <provider endpoint-name="AirlineReservationPortTypeBindingPort" service-name="ns2:AirlineReservationService"/>
             </connection>
             <connection>
+                <consumer endpoint-name="travelGoodBPELHelperPortTypeRole_partnerRole" service-name="ns1:PartnerLink4"/>
+                <provider endpoint-name="travelGoodBPELHelperPort" service-name="ns2:travelGoodBPELHelperService"/>
+            </connection>
+            <connection>
                 <consumer endpoint-name="travelGoodPortTypeBindingPort" service-name="ns3:travelGoodService"/>
                 <provider endpoint-name="travelGoodPortTypeRole_myRole" service-name="ns1:PartnerLink1"/>
             </connection>

@@ -250,7 +250,7 @@
   </binding>
   <service name="travelGoodService">
     <port name="travelGoodPortTypeBindingPort" binding="tns:travelGoodPortTypeBinding">
-      <soap:address location="http://10.16.96.207:9080/service"/>
+      <soap:address location="http://W520:9080/service"/>
     </port>
   </service>
     <plnk:partnerLinkType name="travelGood">

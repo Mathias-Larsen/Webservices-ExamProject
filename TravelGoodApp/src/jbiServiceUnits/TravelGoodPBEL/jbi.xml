@@ -16,5 +16,10 @@
             <ns4:process-name>travelGoodPBEL</ns4:process-name>
             <ns4:file-path>travelGoodPBEL.bpel</ns4:file-path>
         </consumes>
+        <consumes endpoint-name="travelGoodBPELHelperPortTypeRole_partnerRole" interface-name="ns1:travelGoodBPELHelperPortType" service-name="ns0:PartnerLink4">
+            <ns4:display-name>PartnerLink4</ns4:display-name>
+            <ns4:process-name>travelGoodPBEL</ns4:process-name>
+            <ns4:file-path>travelGoodPBEL.bpel</ns4:file-path>
+        </consumes>
     </services>
 </jbi>
