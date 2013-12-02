@@ -12,7 +12,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 /**
  *
- * @author Jesper
+ * @author All
  */
 @XmlRootElement()
 public class Itinerary {

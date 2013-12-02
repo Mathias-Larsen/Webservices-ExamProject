@@ -48,7 +48,7 @@ public class BookingResource {
         Itinerary itinerary = ItineraryResource.itinerarys.get(key);
 
         if (itinerary == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return Response.status(Response.Status.NOT_FOUND).entity("Itineary not found").build();
         }
    
         dk.dtu.imm.fastmoney.types.CreditCardInfoType cc = new dk.dtu.imm.fastmoney.types.CreditCardInfoType();
@@ -67,7 +67,7 @@ public class BookingResource {
             }
             else
             {
-                return Response.status(Response.Status.BAD_REQUEST).build();
+                return Response.status(Response.Status.FORBIDDEN).entity("Itineary cannot be booked").build();
             }
 
         }
@@ -79,12 +79,12 @@ public class BookingResource {
             }
             else
             {
-                return Response.status(Response.Status.BAD_REQUEST).build();
+                return Response.status(Response.Status.FORBIDDEN).entity("Itineary cannot be cancelled").build();
             }
         }
         else
         {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Action not allowed").build();
         }
 
 

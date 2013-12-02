@@ -126,7 +126,7 @@ public class ItineraryResource {
         Itinerary itinerary = itinerarys.get(key); //Get the itineary from the generated key
         if(!(itinerary.getStatus().equals(PLANNING_ITINERARY)))
         {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Itineary is already done planning").build();
+            return Response.status(Response.Status.FORBIDDEN).entity("Itineary is already done planning").build();
         }
         itinerarys.remove(key);
         BookingStatusRepresentation response = new BookingStatusRepresentation();

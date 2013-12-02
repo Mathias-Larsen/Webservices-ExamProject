@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author Jesper
+ * @author All
  */
 @XmlRootElement()
 public class Booking {

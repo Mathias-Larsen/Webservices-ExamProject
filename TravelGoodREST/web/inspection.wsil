@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<inspection xmlns="http://schemas.xmlsoap.org/ws/2001/10/inspection/">
+	<abstract>TravelGood's Public Web Services</abstract>
+	<service>
+        <name>TravelGood</name>
+        <abstract>The travel planning services offered by the the TraveGood company. By the use of the services offered by LameDuck and NiceView, create a travel itinerary. Add flights and hotels to the itinerary. Cancel am already booked itinerary.</abstract>
+        <description referencedNamespace="http://schemas.xmlsoap.org/wsdl/"
+                 location="http://localhost:8080/TravelGood/travelGoodService?wsdl"/>
+    </service>
+	<service>
+        <name>LameDuck</name>
+        <abstract>The flight registration services offered by the LameDuck company. Get a list of flights by search criteria. Book a flight from. Cancel an already booked flight.</abstract>
+        <description referencedNamespace="http://schemas.xmlsoap.org/wsdl/"
+                 location="http://localhost:8080/AirlineReservation/AirlineReservationService?wsdl"/>
+    </service>
+	<service>
+        <name>NiceView</name>
+        <abstract>The hotel registration services offered by the the NiceView company Get a list of hotels by search criteria. Book a hotel from. Cancel an already booked hotel.</abstract>
+        <description referencedNamespace="http://schemas.xmlsoap.org/wsdl/"
+                 location="http://localhost:8080/HotelReservation/HotelReservationService?wsdl"/>
+    </service>
+    <link referencedNamespace="http://schemas.xmlsoap.org/ws/2001/10/inspection/" 
+         location="http://localhost:8080/HotelReservation/inspection.wsil" >
+      <abstract>NiceView's Hotel registration company</abstract>
+    </link>   
+	<link referencedNamespace="http://schemas.xmlsoap.org/ws/2001/10/inspection/" 
+         location="http://localhost:8080/AirlineReservation/inspection.wsil" >
+      <abstract>LameDuck's flight planning company</abstract>
+    </link>
+</inspection>

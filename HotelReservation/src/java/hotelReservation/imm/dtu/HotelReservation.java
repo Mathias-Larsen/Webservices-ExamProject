@@ -25,7 +25,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 /**
  *
- * @author Jesper
+ * @author Mathias and Jacob
  */
 @WebService(serviceName = "HotelReservationService", portName = "HotelReservationPortTypeBindingPort", endpointInterface = "dk.dtu.imm.hotelreservation.HotelReservationPortType", targetNamespace = "urn://hotelReservation.imm.dtu.dk", wsdlLocation = "WEB-INF/wsdl/HotelReservation/HotelReservation.wsdl")
 public class HotelReservation {

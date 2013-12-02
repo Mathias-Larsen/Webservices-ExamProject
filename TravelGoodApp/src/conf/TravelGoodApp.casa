@@ -4,18 +4,18 @@
         <endpoint endpoint-name="travelGoodPortTypeBindingPort" interface-name="ns1:travelGoodPortType" name="endpoint1" service-name="ns1:travelGoodService"/>
         <endpoint endpoint-name="AirlineReservationPortTypeBindingPort" interface-name="ns2:AirlineReservationPortType" name="endpoint2" service-name="ns2:AirlineReservationService"/>
         <endpoint endpoint-name="HotelReservationPortTypeBindingPort" interface-name="ns3:HotelReservationPortType" name="endpoint3" service-name="ns3:HotelReservationService"/>
-        <endpoint display-name="PartnerLink1" endpoint-name="travelGoodPortTypeRole_myRole" file-path="travelGoodPBEL.bpel" interface-name="ns1:travelGoodPortType" name="endpoint4" process-name="travelGoodPBEL" service-name="ns4:PartnerLink1"/>
-        <endpoint display-name="PartnerLink2" endpoint-name="AirlineReservationRole_partnerRole" file-path="travelGoodPBEL.bpel" interface-name="ns2:AirlineReservationPortType" name="endpoint5" process-name="travelGoodPBEL" service-name="ns4:PartnerLink2"/>
-        <endpoint display-name="PartnerLink3" endpoint-name="HotelReservationRole_partnerRole" file-path="travelGoodPBEL.bpel" interface-name="ns3:HotelReservationPortType" name="endpoint6" process-name="travelGoodPBEL" service-name="ns4:PartnerLink3"/>
-        <endpoint display-name="PartnerLink4" endpoint-name="travelGoodBPELHelperPortTypeRole_partnerRole" file-path="travelGoodPBEL.bpel" interface-name="ns2:travelGoodBPELHelperPortType" name="endpoint7" process-name="travelGoodPBEL" service-name="ns4:PartnerLink4"/>
-        <endpoint endpoint-name="travelGoodBPELHelperPort" interface-name="ns2:travelGoodBPELHelperPortType" name="endpoint8" service-name="ns2:travelGoodBPELHelperService"/>
+        <endpoint endpoint-name="travelGoodBPELHelperPort" interface-name="ns2:travelGoodBPELHelperPortType" name="endpoint4" service-name="ns2:travelGoodBPELHelperService"/>
+        <endpoint display-name="PartnerLink1" endpoint-name="travelGoodPortTypeRole_myRole" file-path="travelGoodPBEL.bpel" interface-name="ns1:travelGoodPortType" name="endpoint5" process-name="travelGoodPBEL" service-name="ns4:PartnerLink1"/>
+        <endpoint display-name="PartnerLink2" endpoint-name="AirlineReservationRole_partnerRole" file-path="travelGoodPBEL.bpel" interface-name="ns2:AirlineReservationPortType" name="endpoint6" process-name="travelGoodPBEL" service-name="ns4:PartnerLink2"/>
+        <endpoint display-name="PartnerLink3" endpoint-name="HotelReservationRole_partnerRole" file-path="travelGoodPBEL.bpel" interface-name="ns3:HotelReservationPortType" name="endpoint7" process-name="travelGoodPBEL" service-name="ns4:PartnerLink3"/>
+        <endpoint display-name="PartnerLink4" endpoint-name="travelGoodBPELHelperPortTypeRole_partnerRole" file-path="travelGoodPBEL.bpel" interface-name="ns2:travelGoodBPELHelperPortType" name="endpoint8" process-name="travelGoodPBEL" service-name="ns4:PartnerLink4"/>
     </endpoints>
     <service-units>
         <service-engine-service-unit artifacts-zip="TravelGoodPBEL.jar" component-name="sun-bpel-engine" defined="true" description="Represents this Service Unit" internal="true" name="TravelGoodApp-TravelGoodPBEL" unit-name="TravelGoodPBEL" unknown="false" x="144" y="99">
-            <provides endpoint="endpoint4"/>
-            <consumes endpoint="endpoint5"/>
+            <provides endpoint="endpoint5"/>
             <consumes endpoint="endpoint6"/>
             <consumes endpoint="endpoint7"/>
+            <consumes endpoint="endpoint8"/>
         </service-engine-service-unit>
         <binding-component-service-unit artifacts-zip="sun-http-binding.jar" component-name="sun-http-binding" description="Represents this Service Unit" name="TravelGoodApp-sun-http-binding" unit-name="sun-http-binding">
             <ports>
@@ -31,8 +31,8 @@
                 </port>
                 <port x="0" y="-1">
                     <link xlink:href="../jbiServiceUnits/TravelGoodPBEL/localhost_8080/TravelGoodBPELHelper/travelGoodBPELHelperService.wsdl#xpointer(/definitions/service[@name='travelGoodBPELHelperService']/port[@name='travelGoodBPELHelperPort'])" xlink:type="simple"/>
-                    <consumes endpoint="endpoint8"/>
-                    <provides endpoint="endpoint8"/>
+                    <consumes endpoint="endpoint4"/>
+                    <provides endpoint="endpoint4"/>
                 </port>
                 <port x="67" y="118">
                     <link xlink:href="../jbiServiceUnits/TravelGoodPBEL/travelGood.wsdl#xpointer(/definitions/service[@name='travelGoodService']/port[@name='travelGoodPortTypeBindingPort'])" xlink:type="simple"/>
@@ -43,10 +43,10 @@
         </binding-component-service-unit>
     </service-units>
     <connections>
-        <connection consumer="endpoint5" provider="endpoint2" state="unchanged"/>
-        <connection consumer="endpoint7" provider="endpoint8" state="unchanged"/>
-        <connection consumer="endpoint1" provider="endpoint4" state="unchanged"/>
-        <connection consumer="endpoint6" provider="endpoint3" state="unchanged"/>
+        <connection consumer="endpoint6" provider="endpoint2" state="unchanged"/>
+        <connection consumer="endpoint8" provider="endpoint4" state="unchanged"/>
+        <connection consumer="endpoint1" provider="endpoint5" state="unchanged"/>
+        <connection consumer="endpoint7" provider="endpoint3" state="unchanged"/>
     </connections>
     <porttypes>
         <link xlink:href="../jbiServiceUnits/TravelGoodPBEL/localhost_8080/AirlineReservation/AirlineReservationService.wsdl#xpointer(/definitions/portType[@name='AirlineReservationPortType'])" xlink:type="simple"/>

@@ -25,7 +25,7 @@ import javax.xml.ws.WebServiceRef;
 
 /**
  *
- * @author Jesper
+ * @author Jesper, Ian and Søren
  */
 @WebService(serviceName = "AirlineReservationService", portName = "AirlineReservationPortTypeBindingPort", endpointInterface = "dk.dtu.imm.airlinereservation.AirlineReservationPortType", targetNamespace = "urn://airlineReservation.imm.dtu.dk", wsdlLocation = "WEB-INF/wsdl/AirlineReservation/AirlineReservation.wsdl")
 public class AirlineReservation {

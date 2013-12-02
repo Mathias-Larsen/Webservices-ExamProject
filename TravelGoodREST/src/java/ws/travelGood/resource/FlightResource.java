@@ -47,11 +47,11 @@ public class FlightResource {
         String key = ItineraryResource.createKey(cid, iid);
         Itinerary itinerary = ItineraryResource.itinerarys.get(key);
         if (itinerary == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return Response.status(Response.Status.NOT_FOUND).entity("Itineary not found").build();
         }
         else if(!(itinerary.getStatus().equals(ItineraryResource.PLANNING_ITINERARY)))
         {
-            return Response.status(Response.Status.FORBIDDEN).build();
+            return Response.status(Response.Status.FORBIDDEN).entity("Itineary is done planning").build();
         }
         else {
             Booking booking = new Booking();
@@ -104,7 +104,11 @@ public class FlightResource {
         String key = ItineraryResource.createKey(cid, iid);
         Itinerary itinerary = ItineraryResource.itinerarys.get(key);
         if (itinerary == null) {
-            return Response.status(Response.Status.FORBIDDEN).build();
+            return Response.status(Response.Status.NOT_FOUND).entity("Itineary is not found").build();
+        }
+        else if(!(itinerary.getStatus().equals(ItineraryResource.PLANNING_ITINERARY)))
+        {
+            return Response.status(Response.Status.FORBIDDEN).entity("Itineary is done planning").build();
         }
         XMLGregorianCalendar date1 = stringToDate(date);
         
